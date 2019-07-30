@@ -36,6 +36,7 @@ class MainController extends AbstractController
      */
 
     public function test1(){
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $data = 'test1 test1 test1';
 
         return $this->render('home.html.twig',[
