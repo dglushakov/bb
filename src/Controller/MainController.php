@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,10 +25,16 @@ class MainController extends AbstractController
     /**
      * @Route("/test", name="test")
      */
-    public function test(){
+    public function test(EntityManagerInterface $em){
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $users = $userRepo->findAll();
+
+
     $data = 'test test test';
 
+
         return $this->render('home.html.twig',[
+            'users'=>$users,
             'data'=>$data,
             ]);
     }

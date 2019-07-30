@@ -4,4 +4,8 @@
 <h1>HOME</h1>
 
     {{ data }}
+{% if users is defined %}
+    {{ dump(users) }}
+{% endif %}
+
 {% endblock %}
