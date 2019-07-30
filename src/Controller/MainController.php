@@ -14,7 +14,9 @@ class MainController extends AbstractController
      */
     public function home(){
 
-        return $this->render('home.html.twig');
+        return $this->render('home.html.twig', [
+            'data'=>'home',
+        ]);
     }
 
 
@@ -27,5 +29,17 @@ class MainController extends AbstractController
         return $this->render('home.html.twig',[
             'data'=>$data,
             ]);
+    }
+
+    /**
+     * @Route("/test1", name="test1")
+     */
+
+    public function test1(){
+        $data = 'test1 test1 test1';
+
+        return $this->render('home.html.twig',[
+            'data'=>$data,
+        ]);
     }
 }
