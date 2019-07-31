@@ -5,7 +5,11 @@
 
     {{ data }}
 {% if users is defined %}
-    {{ dump(users) }}
+    {% for user in suers %}
+        {{ user.id }}
+        {{ user.username }}
+        {{ user.password }}
+    {% endfor %}
 {% endif %}
 
 {% endblock %}
