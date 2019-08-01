@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col">
+        <ul class="list-unstyled list-group">
+            {% if is_granted('ROLE_USER') %}
+
+                <li class="list-group-item  list-group-item-action">
+                    <a href="{{ path('home') }}" class="stretched-link text-dark">
+                        Home
+                    </a>
+                </li>
+
+
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+
+                <li class="list-group-item list-group-item-action">
+                    <a href="{{ path('userlist') }}" class="stretched-link text-dark">
+                        Users
+                    </a>
+                </li>
+
+                </a>
+            {% endif %}
+        </ul>
+    </div>
+</div>

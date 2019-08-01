@@ -4,8 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e661c297d744d0460b528f2d8aa6a1b9",
+    "content-hash": "4e6ec8b272973e8a2943bb35a8867411",
     "packages": [
+        {
+            "name": "dglushakov/trassir",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dglushakov/TrassirNVR.git",
+                "reference": "6f0c3340bd2d301418f55dfb0a31f95da519b848"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/6f0c3340bd2d301418f55dfb0a31f95da519b848",
+                "reference": "6f0c3340bd2d301418f55dfb0a31f95da519b848",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "dglushakov\\trassir\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Glushakov",
+                    "email": "denis.glushakov@bk.ru"
+                }
+            ],
+            "description": "lib for work with Trassir CCTV NVRs",
+            "time": "2019-07-13T21:25:42+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.6.1",

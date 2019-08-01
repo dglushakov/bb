@@ -1,15 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>HOME</h1>
+    <div class="container-fluid">
+        {% include 'include/top.html.twig' %}
 
-    {{ data }}
-{% if users is defined %}
-    {% for user in users %}
-        {{ user.id }}
-        {{ user.username }}
-        {{ user.password }}
-    {% endfor %}
-{% endif %}
 
+        <div class="row">
+            <div class="col-2">
+                {% include 'include/left.html.twig' %}
+            </div>
+
+            <div class="col">
+                {% block main %}
+                    <h1>HOME</h1>
+
+                    {{ data }}
+                    {% if users is defined %}
+
+                    {% endif %}
+                {% endblock %}
+            </div>
+
+        </div>
+
+    </div>
 {% endblock %}

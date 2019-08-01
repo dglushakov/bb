@@ -1,0 +1,68 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <table class="table table-striped text-left">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for user in users %}
+            <tr>
+                <td>
+                    {{ user.id }}
+                </td>
+                <td>
+                    {{ user.username }}
+                </td>
+                <td>
+                    <a href="/user/edit/{{ user.id }}" class="btn btn-info btn-sm"><img
+                                alt="edit"
+                                width="20px"
+                                src="{{ asset('img/edit.png') }}"></a>
+                </td>
+                <td>
+                    <a href="#" data-href="/user/delete/{{ user.id }}" data-toggle="modal"
+                       data-target="#confirm-delete" class="btn btn-sm delete-type">
+                        <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                    </a>
+                </td>
+
+                <td>
+                    {% for role in user.roles %}
+                        {{ role }}
+                    {% endfor %}
+                </td>
+
+            </tr>
+        {% endfor %}
+        {% include 'include/deleteConfirmationModal.html.twig' %}
+
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col">
+            {% form_theme addUserForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(addUserForm) }}
+            {{ form_widget(addUserForm) }}
+            <input type="submit" class="btn btn-success" value="Add new"/>
+            {{ form_end(addUserForm) }}
+        </div>
+    </div>
+{% endblock %}
+{% block javascriptsAfterBody %}
+{{ parent() }}
+
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {confirm-delete
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+{% endblock %}
