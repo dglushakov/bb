@@ -33,10 +33,6 @@ class AddUserForm extends AbstractType
                 'required' => true,
                 'label' => 'Пользователь',
 
-                'attr'=>[
-                    'placeholder' => 'form.order.id.placeholder',
-                    'title' => 'form.order.id.title',
-                ],
             ])
             ->add('password', PasswordType::class, [
                 'required' => true,

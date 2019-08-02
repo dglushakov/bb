@@ -21,7 +21,7 @@ class EditUserForm extends AbstractType
     {
         $userRoles=[
             'Admin' => 'ROLE_ADMIN',
-            'USER' => 'ROLE_USER',
+            'User' => 'ROLE_USER',
         ];
         $builder
             ->add('UserName', TextType::class,[
