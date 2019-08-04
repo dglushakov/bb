@@ -19,13 +19,14 @@ class TrassirNvrController extends AbstractController
     /**
      * @Route("/nvrlist", name="nvrList")
      */
-    public function trassirNvrList(Request $request, EntityManagerInterface $em){
-
+    public function trassirNvrList(Request $request, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         //$username = getenv('TRASSIR_USER');
         //$pass = getenv('TRASSIR_USER_PASSWORD');
         $sdkPass = getenv('TRASSIR_SDK_PASSWORD');
         //$s = new  TrassirServer('10.18.36.33', $username, $pass, $sdkPass);
-      // $obj = $s->getServerObjects();
+        // $obj = $s->getServerObjects();
         //dd($obj);
 
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
@@ -41,16 +42,15 @@ class TrassirNvrController extends AbstractController
             $newNvr = $addNvrForm->getData();
 
 
-
             $em->persist($newNvr);
             $em->flush();
             return $this->redirectToRoute('nvrList');
         }
 
 
-        return $this->render('trassir/trassirNvrList.html.twig',[
-            'servers'=>$trassirNvrList,
-            'addNvrForm'=> $addNvrForm->createView(),
+        return $this->render('trassir/trassirNvrList.html.twig', [
+            'servers' => $trassirNvrList,
+            'addNvrForm' => $addNvrForm->createView(),
         ]);
     }
 
@@ -59,6 +59,7 @@ class TrassirNvrController extends AbstractController
      */
     public function editTrassirNvr(EntityManagerInterface $em, Request $request, $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         //$this->denyAccessUnlessGranted('ROLE_USERS_EDIT');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrToEdit = $trassirNvrRepo->find($id);
@@ -73,8 +74,8 @@ class TrassirNvrController extends AbstractController
             return $this->redirectToRoute('nvrList');
         }
 
-        return $this->render('trassir/editTrassirNvr.html.twig',[
-            'editTrassirNvrForm'=>$EditTrassirNvrForm->createView(),
+        return $this->render('trassir/editTrassirNvr.html.twig', [
+            'editTrassirNvrForm' => $EditTrassirNvrForm->createView(),
         ]);
     }
 
@@ -84,7 +85,7 @@ class TrassirNvrController extends AbstractController
      */
     public function deleteTrassirNvr(EntityManagerInterface $em, $id)
     {
-//        $this->denyAccessUnlessGranted('ROLE_USERS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrToDelete = $trassirNvrRepo->find($id);
         if ($trassirNvrToDelete) {
