@@ -1,0 +1,71 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <h1>Trassir servers</h1>
+    <div class="row border-bottom">
+        <div class="col">
+            #
+        </div>
+        <div class="col">
+            Ip
+        </div>
+        <div class="col">
+            Name
+        </div>
+        <div class="col">
+            Edit
+        </div>
+        <div class="col">
+            Delete
+        </div>
+    </div>
+
+    {% for server in servers %}
+
+        <div class="row bg-light p-2">
+            <div class="col">
+                {{ loop.index }}
+            </div>
+            <div class="col">
+                {{ server.ip }}
+            </div>
+            <div class="col">
+                {{ server.name }}
+            </div>
+            <div class="col">
+                <a href="/trassirNvr/edit/{{ server.id }}" class="btn btn-info btn-sm"><img
+                            alt="edit"
+                            width="20px"
+                            src="{{ asset('img/edit.png') }}">
+                </a>
+            </div>
+            <div class="col">
+                <a href="#" data-href="/trassirNvr/delete/{{ server.id }}" data-toggle="modal"
+                   data-target="#confirm-delete" class="btn btn-sm delete-type">
+                    <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    {% include 'include/deleteConfirmationModal.html.twig' %}
+    <hr>
+    <div class="row bg-light p-2">
+        <div class="col">
+            {% form_theme addNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(addNvrForm) }}
+            {{ form_widget(addNvrForm) }}
+            <input type="submit" class="btn btn-success" value="Add new"/>
+            {{ form_end(addNvrForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {confirm-delete
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+{% endblock %}

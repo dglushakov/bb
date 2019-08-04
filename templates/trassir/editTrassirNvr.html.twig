@@ -1,0 +1,22 @@
+{% extends 'home.html.twig' %}
+
+
+{% block main %}
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Edit Trassir Nvr</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light">
+            {% form_theme editTrassirNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(editTrassirNvrForm) }}
+            {{ form_widget(editTrassirNvrForm) }}
+            <input type="submit" class="btn btn-success" value="Save"/>
+            <a href="{{ path('nvrList') }}" class="btn btn-danger">Cancel</a>
+            {{ form_end(editTrassirNvrForm) }}
+        </div>
+    </div>
+
+{% endblock %}
