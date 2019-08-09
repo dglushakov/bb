@@ -1,0 +1,36 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    {{ dump(trassirUsers) }}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>
+                Users
+            </th>
+            {% for key, nvr in trassirUsers %}
+                <th class="col text-nowrap">
+                    {{ key }}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                #
+            </td>
+
+            {% for key, nvr in trassirUsers %}
+                <td class="col text-nowrap">
+                    {{ key }}
+                </td>
+            {% endfor %}
+
+        </tr>
+        </tbody>
+
+    </table>
+
+{% endblock %}

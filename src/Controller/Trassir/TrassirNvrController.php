@@ -22,17 +22,10 @@ class TrassirNvrController extends AbstractController
     public function trassirNvrList(Request $request, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        //$username = getenv('TRASSIR_USER');
-        //$pass = getenv('TRASSIR_USER_PASSWORD');
-        $sdkPass = getenv('TRASSIR_SDK_PASSWORD');
-        //$s = new  TrassirServer('10.18.36.33', $username, $pass, $sdkPass);
-        // $obj = $s->getServerObjects();
-        //dd($obj);
-
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findAll();
 
-        $addNvrForm = $this->createForm(AddNvrForm::class, new TrassirNvr('127.0.0.1'));
+        $addNvrForm = $this->createForm(AddNvrForm::class, new TrassirNvr());
 
         $addNvrForm->handleRequest($request);
         if ($addNvrForm->isSubmitted() && $addNvrForm->isValid()) {
@@ -93,6 +86,31 @@ class TrassirNvrController extends AbstractController
             $em->flush();
         }
         return $this->redirectToRoute('nvrList');
+    }
+
+
+    /**
+     * @Route("/trassirUsersList", name="trassirUsersList")
+     */
+    public function trassirusersList(){
+
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+        $trassirNvrList = $trassirNvrRepo->findAll();
+
+        $trassirUsers=[];
+        foreach ($trassirNvrList as $nvr){
+            $trassirServer = new TrassirServer($nvr->getIp(), getenv('TRASSIR_USER'), getenv('TRASSIR_USER_PASSWORD'), getenv('TRASSIR_SDK_PASSWORD'));
+            //$nvr->trassirUsers=$trassirServer->getServerObjects()['UserNames'];
+            $trassirServer->getServerObjects();
+            $trassirUsers[$trassirServer->getName()]['users']=$trassirServer->getServerObjects()['UserNames'];
+        }
+
+        return $this->render('trassir/trassirusersList.html.twig',[
+            //'trassirNvrList'=>$trassirNvrList,
+            'trassirUsers'=>$trassirUsers,
+
+        ]);
     }
 
 }
