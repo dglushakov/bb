@@ -29,9 +29,8 @@ class TrassirDataCollector extends AbstractController
         $trassirServer = new TrassirServer(
             $trassirNvr->getIp(),
             $_ENV['TRASSIR_USER'],
-
-            getenv('TRASSIR_USER_PASSWORD'),
-            getenv('TRASSIR_SDK_PASSWORD'));
+            $_ENV['TRASSIR_USER_PASSWORD'],
+            $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
         if($trassirServer->getHealth()) {
             $trassirNvrData->setHealth($trassirServer->getHealth());
