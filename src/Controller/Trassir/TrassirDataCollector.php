@@ -54,7 +54,9 @@ class TrassirDataCollector extends AbstractController
 
         $em->persist($trassirNvrData);
         $em->flush();
-
+dump($trassirServer);
+dump($trassirNvr);
+        dd($trassirNvrData);
         return new Response('true');
     }
 
