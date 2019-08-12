@@ -31,6 +31,16 @@ class TrassirNvrData
      */
     private $trassirNvrId;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateTime;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $success;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +78,30 @@ class TrassirNvrData
     public function setTrassirNvrId(?TrassirNvr $trassirNvrId): self
     {
         $this->trassirNvrId = $trassirNvrId;
+
+        return $this;
+    }
+
+    public function getDateTime(): ?\DateTimeInterface
+    {
+        return $this->dateTime;
+    }
+
+    public function setDateTime(?\DateTimeInterface $dateTime): self
+    {
+        $this->dateTime = $dateTime;
+
+        return $this;
+    }
+
+    public function getSuccess(): ?bool
+    {
+        return $this->success;
+    }
+
+    public function setSuccess(?bool $success): self
+    {
+        $this->success = $success;
 
         return $this;
     }

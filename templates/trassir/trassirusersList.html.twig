@@ -1,36 +1,49 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
-    {{ dump(trassirUsers) }}
-
     <table class="table table-striped">
         <thead>
         <tr>
             <th>
                 Users
             </th>
-            {% for key, nvr in trassirUsers %}
-                <th class="col text-nowrap">
-                    {{ key }}
-                </th>
+            {% for key, nvr in nvrList %}
+                {% if nvr.Id is defined %}
+                    <th class="col text-nowrap">
+                        {% if nvr.name is defined and nvr.name!="" %}
+                            {{ nvr.name }}
+                        {% else %}
+                            {{ nvr.Ip }}
+                        {% endif %}
+                    </th>
+                {% endif %}
             {% endfor %}
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                #
-            </td>
-
-            {% for key, nvr in trassirUsers %}
+        {% for userName, user in trassirUsers %}
+            <tr>
                 <td class="col text-nowrap">
-                    {{ key }}
+                    {{ userName }}
                 </td>
-            {% endfor %}
+                {% for key, nvr in nvrList %}
 
-        </tr>
+                    {% if nvr.ip in user.ip %}
+                        <td class="text-center" title="{{ nvr.ip }} {{ nvr.name }}">
+                            +
+                        </td>
+                    {% else %}
+                        <td>
+
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
         </tbody>
 
     </table>
+
+
 
 {% endblock %}

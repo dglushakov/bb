@@ -7,6 +7,7 @@ namespace App\Controller\Trassir;
 use App\Controller\Trassir\Forms\AddNvrForm;
 use App\Controller\Trassir\Forms\EditTrassirNvrForm;
 use App\Entity\TrassirNvr;
+use App\Entity\TrassirNvrData;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,23 +93,51 @@ class TrassirNvrController extends AbstractController
     /**
      * @Route("/trassirUsersList", name="trassirUsersList")
      */
-    public function trassirusersList(){
+    public function trassirusersList()
+    {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findAll();
 
-        $trassirUsers=[];
-        foreach ($trassirNvrList as $nvr){
-            $trassirServer = new TrassirServer($nvr->getIp(), getenv('TRASSIR_USER'), getenv('TRASSIR_USER_PASSWORD'), getenv('TRASSIR_SDK_PASSWORD'));
-            //$nvr->trassirUsers=$trassirServer->getServerObjects()['UserNames'];
-            $trassirServer->getServerObjects();
-            $trassirUsers[$trassirServer->getName()]['users']=$trassirServer->getServerObjects()['UserNames'];
+        $trassirNVrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
+
+        /**
+         * @var $trassirNvrDataList TrassirNvrData[]
+         */
+        $trassirNvrDataList = [];
+        foreach ($trassirNvrList as $trassirNvr) {
+            $trassirNvrDataList[] = $trassirNVrDataRepo->findOneBy([
+                'trassirNvrId' => $trassirNvr,
+                'success' => true,
+
+            ], [
+                'dateTime' => 'DESC'
+            ]);
         }
 
-        return $this->render('trassir/trassirusersList.html.twig',[
-            //'trassirNvrList'=>$trassirNvrList,
-            'trassirUsers'=>$trassirUsers,
+
+        $trassirUsersData=[];
+        foreach ($trassirNvrDataList as $trassirNvrData){
+            if($trassirNvrData !== NULL){
+                foreach ($trassirNvrData->getObjects()['UserNames'] as $username){
+                    $trassirUsersData[$username]['ip'][]=$trassirNvrData->getTrassirNvrId()->getIp();
+                }
+            }
+        }
+        ksort($trassirUsersData);
+//        $trassirUsers=[];
+//        foreach ($trassirNvrList as $nvr){
+//            $trassirServer = new TrassirServer($nvr->getIp(), getenv('TRASSIR_USER'), getenv('TRASSIR_USER_PASSWORD'), getenv('TRASSIR_SDK_PASSWORD'));
+//            //$nvr->trassirUsers=$trassirServer->getServerObjects()['UserNames'];
+//            $trassirServer->getServerObjects();
+//            $trassirUsers[$trassirServer->getName()]['users']=$trassirServer->getServerObjects()['UserNames'];
+//        }
+
+        return $this->render('trassir/trassirusersList.html.twig', [
+            //'trassirNvrDataList' => $trassirNvrDataList,
+            'nvrList'=>$trassirNvrList,
+            'trassirUsers'=>$trassirUsersData,
 
         ]);
     }

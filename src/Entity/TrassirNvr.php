@@ -39,6 +39,11 @@ class TrassirNvr
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastHealthAndDataCollectedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +81,18 @@ class TrassirNvr
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLastHealthAndDataCollectedAt(): ?\DateTimeInterface
+    {
+        return $this->lastHealthAndDataCollectedAt;
+    }
+
+    public function setLastHealthAndDataCollectedAt(?\DateTimeInterface $lastHealthAndDataCollectedAt): self
+    {
+        $this->lastHealthAndDataCollectedAt = $lastHealthAndDataCollectedAt;
 
         return $this;
     }

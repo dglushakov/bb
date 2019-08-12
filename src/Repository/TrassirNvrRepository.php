@@ -19,6 +19,24 @@ class TrassirNvrRepository extends ServiceEntityRepository
         parent::__construct($registry, TrassirNvr::class);
     }
 
+     /**
+      * @return TrassirNvr[] Returns an array of TrassirNvr objects
+      */
+
+    public function findNvrsToCollectData(){
+        $dateTimeToCheck = new \DateTime();
+        $dateTimeToCheck->modify('- 30 minutes');
+
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.lastHealthAndDataCollectedAt < :dateTime')
+            ->orWhere('t.lastHealthAndDataCollectedAt is NULL')
+            ->setParameter('dateTime', $dateTimeToCheck)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     // /**
     //  * @return TrassirNvr[] Returns an array of TrassirNvr objects
     //  */

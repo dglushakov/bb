@@ -9,7 +9,10 @@ use App\Entity\TrassirNvrData;
 use Dglushakov\Trassir\TrassirServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Json;
 
 class TrassirDataCollector extends AbstractController
 {
@@ -23,31 +26,87 @@ class TrassirDataCollector extends AbstractController
 
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
-        $trassirServer = new TrassirServer($trassirNvr->getIp(), getenv('TRASSIR_USER'), getenv('TRASSIR_USER_PASSWORD'), getenv('TRASSIR_SDK_PASSWORD'));
-
+        $trassirServer = new TrassirServer(
+            $trassirNvr->getIp(),
+            getenv('TRASSIR_USER'),
+            getenv('TRASSIR_USER_PASSWORD'),
+            getenv('TRASSIR_SDK_PASSWORD'));
         $trassirNvrData = new TrassirNvrData();
-        $trassirNvrData->setHealth($trassirServer->getHealth());
-        $trassirNvrData->setObjects($trassirServer->getServerObjects());
+        if($trassirServer->getHealth()) {
+            $trassirNvrData->setHealth($trassirServer->getHealth());
+        } else {
+            $trassirNvrData->setHealth([
+                'status'=>'error',
+            ]);
+        }
+
+        $trassirNvr->setLastHealthAndDataCollectedAt(new \DateTime());
+        if($trassirServer->getServerObjects()){
+            $trassirNvrData->setObjects($trassirServer->getServerObjects());
+        } else {
+            $trassirNvrData->setObjects([
+                'status'=>'error'
+            ]);
+        }
+
         $trassirNvrData->setTrassirNvrId($trassirNvr);
+        $trassirNvrData->setDateTime(new \DateTime());
 
         $em->persist($trassirNvrData);
         $em->flush();
 
-        return true;
+        return new Response('true');
     }
 
     /**
-     * @Route("/trassirDataCollctFromAllServers", name="trassirDataCollctFromAllServers")
+     * @Route("/trassirDataCollectNew", name="trassirDataCollectNew")
      */
-    public function trassirDataCollctFromAllServers(TrassirDataCollector $trassirDataCollector, EntityManagerInterface $em) {
+    public function trassirDataCollectNew(EntityManagerInterface $em) {
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNvrRepo->findall();
+        $trassirNvrList = $trassirNvrRepo->findNvrsToCollectData();
 
+        //$trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
         foreach ($trassirNvrList as $nvrToCollectData) {
-            $this->trassirDataCollect($nvrToCollectData->getId(), $em);
+            $trassirServer = new TrassirServer($nvrToCollectData->getIp(),
+                getenv('TRASSIR_USER'),
+                getenv('TRASSIR_USER_PASSWORD'),
+                getenv('TRASSIR_SDK_PASSWORD'));
+            $trassirNvrData = new TrassirNvrData();
+            if($trassirServer->getHealth()) {
+                $trassirNvrData->setHealth($trassirServer->getHealth());
+                $trassirNvrData->setSuccess(true);
+            } else {
+                $trassirNvrData->setHealth([
+                    'status'=>'error',
+                ]);
+                $trassirNvrData->setSuccess(false);
+            }
+
+            if($trassirServer->getServerObjects()){
+                $trassirNvrData->setObjects($trassirServer->getServerObjects());
+            } else {
+                $trassirNvrData->setObjects([
+                    'status'=>'error'
+                ]);
+            }
+
+            $trassirNvrData->setTrassirNvrId($nvrToCollectData);
+            $trassirNvrData->setDateTime(new \DateTime());
+            $em->persist($trassirNvrData);
+
+            $nvrToCollectData->setLastHealthAndDataCollectedAt(new \DateTime());
+            $nvrToCollectData->setName($trassirServer->getName());
+            $nvrToCollectData->setGuid($trassirServer->getGuid());
+            $em->persist($nvrToCollectData);
+
         }
-        return true;
+        $em->flush();
+
+
+        return new JsonResponse([
+            'result'=>true,
+        ]);
     }
 
 
