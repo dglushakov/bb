@@ -96,12 +96,19 @@ class TrassirDataCollector extends AbstractController
 
             $trassirNvrData->setTrassirNvrId($nvrToCollectData);
             $trassirNvrData->setDateTime(new \DateTime());
+
+
+
             $em->persist($trassirNvrData);
 
             $nvrToCollectData->setLastHealthAndDataCollectedAt(new \DateTime());
             $nvrToCollectData->setName($trassirServer->getName());
             $nvrToCollectData->setGuid($trassirServer->getGuid());
             $em->persist($nvrToCollectData);
+
+            dump($trassirNvrList);
+            dump($trassirNvrData);
+            dd($trassirServer);
 
         }
         $em->flush();
