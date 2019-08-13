@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dglushakov/trassir",
-            "version": "1.0.9",
+            "version": "1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dglushakov/TrassirNVR.git",
-                "reference": "2cd6d789ec20ff0d25494822375a28dece23763c"
+                "reference": "471992128823d7538257e575db545d61abcc6493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/2cd6d789ec20ff0d25494822375a28dece23763c",
-                "reference": "2cd6d789ec20ff0d25494822375a28dece23763c",
+                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/471992128823d7538257e575db545d61abcc6493",
+                "reference": "471992128823d7538257e575db545d61abcc6493",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "lib for work with Trassir CCTV NVRs",
-            "time": "2019-08-13T14:00:52+00:00"
+            "time": "2019-08-13T14:14:55+00:00"
         },
         {
             "name": "doctrine/annotations",
