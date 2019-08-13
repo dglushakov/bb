@@ -52,9 +52,9 @@ class TrassirDataCollector extends AbstractController
         $trassirNvrData->setTrassirNvrId($trassirNvr);
         $trassirNvrData->setDateTime(new \DateTime());
 
-        dump($trassirServer);
-        dump($trassirNvr);
-        dd($trassirNvrData);
+        //dump($trassirServer);
+        //dump($trassirNvr);
+        //dd($trassirNvrData);
         $em->persist($trassirNvrData);
         $em->flush();
 
