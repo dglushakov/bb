@@ -105,10 +105,10 @@ class TrassirDataCollector extends AbstractController
             $nvrToCollectData->setName($trassirServer->getName());
             $nvrToCollectData->setGuid($trassirServer->getGuid());
             $em->persist($nvrToCollectData);
-
-            dump($trassirNvrList);
-            dump($trassirNvrData);
-            dd($trassirServer);
+//
+//            dump($trassirNvrList);
+//            dump($trassirNvrData);
+//            dd($trassirServer);
 
         }
         $em->flush();
