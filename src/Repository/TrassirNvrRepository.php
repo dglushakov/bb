@@ -32,7 +32,7 @@ class TrassirNvrRepository extends ServiceEntityRepository
             ->orWhere('t.lastHealthAndDataCollectedAt is NULL')
             ->setParameter('dateTime', $dateTimeToCheck)
             ->orderBy('t.id', 'ASC')
-            ->setMaxResults(2)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult()
             ;
