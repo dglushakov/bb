@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dglushakov/trassir",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dglushakov/TrassirNVR.git",
-                "reference": "cbb68b8879533c6e0bf03286dffd5b17fc491f29"
+                "reference": "2cd6d789ec20ff0d25494822375a28dece23763c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/cbb68b8879533c6e0bf03286dffd5b17fc491f29",
-                "reference": "cbb68b8879533c6e0bf03286dffd5b17fc491f29",
+                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/2cd6d789ec20ff0d25494822375a28dece23763c",
+                "reference": "2cd6d789ec20ff0d25494822375a28dece23763c",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "lib for work with Trassir CCTV NVRs",
-            "time": "2019-08-12T15:27:30+00:00"
+            "time": "2019-08-13T14:00:52+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -6068,16 +6068,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420"
+                "reference": "e612609022e935f3d0337c1295176505b41188c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e612609022e935f3d0337c1295176505b41188c8",
+                "reference": "e612609022e935f3d0337c1295176505b41188c8",
                 "shasum": ""
             },
             "require": {
@@ -6085,7 +6085,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 || ^7.0"
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -6115,7 +6115,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-05-25T20:07:01+00:00"
+            "time": "2019-08-12T20:17:41+00:00"
         },
         {
             "name": "symfony/browser-kit",
