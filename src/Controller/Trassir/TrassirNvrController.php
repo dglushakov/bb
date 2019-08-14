@@ -82,7 +82,15 @@ class TrassirNvrController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrToDelete = $trassirNvrRepo->find($id);
+
+        $trassirNvrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
+        $trassirNvrDataListToDelete = $trassirNvrDataRepo->findBy(['trassirNvrId'=>$trassirNvrToDelete]);
+       
         if ($trassirNvrToDelete) {
+            foreach ($trassirNvrDataListToDelete as $dataToTdelete){
+                $em->remove($dataToTdelete);
+            }
+
             $em->remove($trassirNvrToDelete);
             $em->flush();
         }
