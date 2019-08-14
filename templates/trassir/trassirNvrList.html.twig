@@ -78,23 +78,23 @@
             $(".trassirDataRefresh").click(function (event) {
                 event.preventDefault();
                 $(this).fadeTo("normal", .50);
-                        console.log('pressed');
+                      //  console.log('pressed');
                 var $link = $(event.currentTarget);
 
-                
+
                 $.ajax({
                     method: "POST",
                     url: $link.attr('href'),
                 }).done(function (data) {
-                    console.log ('got data ' +data);
+                    //console.log ('got data ' +data);
                     $link.fadeTo("normal", 1);
                     if(data==='true') {
-                        console.log ('success');
+                       // console.log ('success');
 
                         $link.children(".refreshButtonImage").attr('src',"{{ asset('img/done.png') }}");
                     } else {
-                        console.log ('ne success');
-                        $link.children(".refreshButtonImage").attr('src',"{{ asset('img/cancel.png') }}");
+                       // console.log ('ne success');
+                        $link.children(".refreshButtonImage").attr('src',"{{ asset('img/error.png') }}");
                     }
                 })
             });

@@ -24,6 +24,7 @@ class TrassirDataCollector extends AbstractController
      * @throws \Exception
      */
     public function trassirDataCollect($id, EntityManagerInterface $em) {
+        $result = true;
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvr = $trassirNvrRepo->find($id);
 
@@ -46,6 +47,7 @@ class TrassirDataCollector extends AbstractController
         if($trassirServer->getServerObjects()){
             $trassirNvrData->setObjects($trassirServer->getServerObjects());
         } else {
+            $result= false;
             $trassirNvrData->setObjects([
                 'status'=>'error'
             ]);
@@ -61,8 +63,8 @@ class TrassirDataCollector extends AbstractController
         $em->persist($trassirNvr);
 
         $em->flush();
-
-        return new Response('true');
+        $converted_res = ($result) ? 'true' : 'false';
+        return new Response($converted_res);
     }
 
     /**
