@@ -1,11 +1,14 @@
 {% extends 'home.html.twig' %}
 
-{% block body %}
-    <table class="table table-striped">
+{% block main %}
+    <table class="table table-striped mt-4">
         <thead>
         <tr>
             <th>
-                Users
+                #
+            </th>
+            <th>
+                Login
             </th>
             {% for key, nvr in nvrList %}
                 {% if nvr.Id is defined %}
@@ -23,7 +26,10 @@
         <tbody>
         {% for userName, user in trassirUsers %}
             <tr>
-                <td class="col text-nowrap">
+                <td>
+                    {{ loop.index }}
+                </td>
+                <td class="col text-nowrap" title="{{ user.ip|join(', \n') }}">
                     {{ userName }}
                 </td>
                 {% for key, nvr in nvrList %}
