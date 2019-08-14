@@ -12,12 +12,14 @@
             </th>
             {% for key, nvr in nvrList %}
                 {% if nvr.Id is defined %}
-                    <th class="col text-nowrap">
-                        {% if nvr.name is defined and nvr.name!="" %}
-                            {{ nvr.name }}
-                        {% else %}
-                            {{ nvr.Ip }}
-                        {% endif %}
+                    <th class="col text-nowrap tex-vertical">
+                        <div><span>
+                            {% if nvr.name is defined and nvr.name!="" %}
+                                {{ nvr.name }}
+                            {% else %}
+                                {{ nvr.Ip }}
+                            {% endif %}
+                        </span></div>
                     </th>
                 {% endif %}
             {% endfor %}
@@ -35,11 +37,11 @@
                 {% for key, nvr in nvrList %}
 
                     {% if nvr.ip in user.ip %}
-                        <td class="text-center" title="{{ nvr.ip }} {{ nvr.name }}">
+                        <td class="text-center border-right border-gray" title="{{ nvr.ip }} {{ nvr.name }}">
                             +
                         </td>
                     {% else %}
-                        <td>
+                        <td class="border-right border-gray">
 
                         </td>
                     {% endif %}
