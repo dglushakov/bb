@@ -13,10 +13,7 @@
             Name
         </div>
         <div class="col">
-            Edit
-        </div>
-        <div class="col">
-            Delete
+            Refresh/Edit/Delete
         </div>
     </div>
 
@@ -33,13 +30,20 @@
                 {{ server.name }}
             </div>
             <div class="col">
-                <a href="/trassirNvr/edit/{{ server.id }}" class="btn btn-info btn-sm"><img
+                <a href="/trassirdatacollect/{{ server.id }}" class="btn btn-sm trassirDataRefresh"><img
+                            alt="edit"
+                            width="20px"
+                            id="refreshButton{{ server.id }}"
+                            class="refreshButtonImage"
+                            src="{{ asset('img/refresh.png') }}">
+                </a>
+
+                <a href="/trassirNvr/edit/{{ server.id }}" class="btn btn-sm"><img
                             alt="edit"
                             width="20px"
                             src="{{ asset('img/edit.png') }}">
                 </a>
-            </div>
-            <div class="col">
+
                 <a href="#" data-href="/trassirNvr/delete/{{ server.id }}" data-toggle="modal"
                    data-target="#confirm-delete" class="btn btn-sm delete-type">
                     <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
@@ -64,8 +68,37 @@
     {{ parent() }}
 
     <script>
-        $('#confirm-delete').on('show.bs.modal', function (e) {confirm-delete
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            confirm - delete
+                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".trassirDataRefresh").click(function (event) {
+                event.preventDefault();
+                $(this).fadeTo("normal", .50);
+                        console.log('pressed');
+                var $link = $(event.currentTarget);
+
+                
+                $.ajax({
+                    method: "POST",
+                    url: $link.attr('href'),
+                }).done(function (data) {
+                    console.log ('got data ' +data);
+                    $link.fadeTo("normal", 1);
+                    if(data==='true') {
+                        console.log ('success');
+
+                        $link.children(".refreshButtonImage").attr('src',"{{ asset('img/done.png') }}");
+                    } else {
+                        console.log ('ne success');
+                        $link.children(".refreshButtonImage").attr('src',"{{ asset('img/cancel.png') }}");
+                    }
+                })
+            });
+        });
+
     </script>
 {% endblock %}

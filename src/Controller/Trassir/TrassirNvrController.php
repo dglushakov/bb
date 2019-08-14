@@ -85,7 +85,7 @@ class TrassirNvrController extends AbstractController
 
         $trassirNvrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
         $trassirNvrDataListToDelete = $trassirNvrDataRepo->findBy(['trassirNvrId'=>$trassirNvrToDelete]);
-       
+
         if ($trassirNvrToDelete) {
             foreach ($trassirNvrDataListToDelete as $dataToTdelete){
                 $em->remove($dataToTdelete);

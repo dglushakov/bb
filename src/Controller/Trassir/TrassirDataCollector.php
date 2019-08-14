@@ -12,35 +12,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Json;
 
 class TrassirDataCollector extends AbstractController
 {
 
     /**
      * @Route("/trassirdatacollect/{id}", name="trassirDataCollect")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return Response
+     * @throws \Exception
      */
     public function trassirDataCollect($id, EntityManagerInterface $em) {
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvr = $trassirNvrRepo->find($id);
 
-        $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
-        $trassirServer = new TrassirServer(
-            $trassirNvr->getIp(),
+        $trassirServer = new TrassirServer($trassirNvr->getIp(),
             $_ENV['TRASSIR_USER'],
             $_ENV['TRASSIR_USER_PASSWORD'],
             $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
         if($trassirServer->getHealth()) {
             $trassirNvrData->setHealth($trassirServer->getHealth());
+            $trassirNvrData->setSuccess(true);
         } else {
             $trassirNvrData->setHealth([
                 'status'=>'error',
             ]);
+            $trassirNvrData->setSuccess(false);
         }
 
-        $trassirNvr->setLastHealthAndDataCollectedAt(new \DateTime());
         if($trassirServer->getServerObjects()){
             $trassirNvrData->setObjects($trassirServer->getServerObjects());
         } else {
@@ -51,69 +53,29 @@ class TrassirDataCollector extends AbstractController
 
         $trassirNvrData->setTrassirNvrId($trassirNvr);
         $trassirNvrData->setDateTime(new \DateTime());
-
-        //dump($trassirServer);
-        //dump($trassirNvr);
-        //dd($trassirNvrData);
         $em->persist($trassirNvrData);
+
+        $trassirNvr->setLastHealthAndDataCollectedAt(new \DateTime());
+        $trassirNvr->setName($trassirServer->getName());
+        $trassirNvr->setGuid($trassirServer->getGuid());
+        $em->persist($trassirNvr);
+
         $em->flush();
 
         return new Response('true');
     }
 
     /**
-     * @Route("/trassirDataCollectNew", name="trassirDataCollectNew")
+     * @Route("/trassirDataCollectGroup", name="trassirDataCollectGroup")
+     * @throws \Exception
      */
-    public function trassirDataCollectNew(EntityManagerInterface $em) {
+    public function trassirDataCollectGroup(EntityManagerInterface $em) {
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findNvrsToCollectData();
 
-        //$trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-
         foreach ($trassirNvrList as $nvrToCollectData) {
-            $trassirServer = new TrassirServer($nvrToCollectData->getIp(),
-                $_ENV['TRASSIR_USER'],
-                $_ENV['TRASSIR_USER_PASSWORD'],
-                $_ENV['TRASSIR_SDK_PASSWORD']);
-            $trassirNvrData = new TrassirNvrData();
-            if($trassirServer->getHealth()) {
-                $trassirNvrData->setHealth($trassirServer->getHealth());
-                $trassirNvrData->setSuccess(true);
-            } else {
-                $trassirNvrData->setHealth([
-                    'status'=>'error',
-                ]);
-                $trassirNvrData->setSuccess(false);
-            }
-
-            if($trassirServer->getServerObjects()){
-                $trassirNvrData->setObjects($trassirServer->getServerObjects());
-            } else {
-                $trassirNvrData->setObjects([
-                    'status'=>'error'
-                ]);
-            }
-
-            $trassirNvrData->setTrassirNvrId($nvrToCollectData);
-            $trassirNvrData->setDateTime(new \DateTime());
-
-
-
-            $em->persist($trassirNvrData);
-
-            $nvrToCollectData->setLastHealthAndDataCollectedAt(new \DateTime());
-            $nvrToCollectData->setName($trassirServer->getName());
-            $nvrToCollectData->setGuid($trassirServer->getGuid());
-            $em->persist($nvrToCollectData);
-//
-//            dump($trassirNvrList);
-//            dump($trassirNvrData);
-//            dd($trassirServer);
-
+            $this->trassirDataCollect($nvrToCollectData->getId(), $em);
         }
-        $em->flush();
-
-
         return new JsonResponse([
             'result'=>true,
         ]);
