@@ -31,7 +31,7 @@
                 <td>
                     {{ loop.index }}
                 </td>
-                <td class="col text-nowrap" title="{{ user.ip|join(', \n') }}">
+                <td class="col text-nowrap" title="{{ user.ip|join(', \n') ~'\n' }} TOTAL: {{ user.ip|length }}">
                     {{ userName }}
                 </td>
                 {% for key, nvr in nvrList %}
