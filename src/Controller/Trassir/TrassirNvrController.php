@@ -24,7 +24,7 @@ class TrassirNvrController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNvrRepo->findAll();
+        $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
 
         $addNvrForm = $this->createForm(AddNvrForm::class, new TrassirNvr());
 
