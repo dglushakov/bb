@@ -31,7 +31,7 @@
                 <td>
                     {{ loop.index }}
                 </td>
-                <td class="col text-nowrap" title="
+                <td class="col text-nowrap  border-right border-gray" title="
                 {% for key, value in user.ip %} {{ loop.index}} {{ key }} {{ value }} {{ "\n " }}{% endfor %}
                 TOTAL: {{ user.ip|length }}">
                     {{ userName }}
