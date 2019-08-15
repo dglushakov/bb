@@ -106,7 +106,7 @@ class TrassirNvrController extends AbstractController
 
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNvrRepo->findAll();
+        $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
 
         $trassirNVrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
@@ -134,14 +134,7 @@ class TrassirNvrController extends AbstractController
             }
         }
         ksort($trassirUsersData);
-//        $trassirUsers=[];
-//        foreach ($trassirNvrList as $nvr){
-//            $trassirServer = new TrassirServer($nvr->getIp(), getenv('TRASSIR_USER'), getenv('TRASSIR_USER_PASSWORD'), getenv('TRASSIR_SDK_PASSWORD'));
-//            //$nvr->trassirUsers=$trassirServer->getServerObjects()['UserNames'];
-//            $trassirServer->getServerObjects();
-//            $trassirUsers[$trassirServer->getName()]['users']=$trassirServer->getServerObjects()['UserNames'];
-//        }
-
+        
         return $this->render('trassir/trassirusersList.html.twig', [
             //'trassirNvrDataList' => $trassirNvrDataList,
             'nvrList'=>$trassirNvrList,
