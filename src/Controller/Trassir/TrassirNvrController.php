@@ -134,7 +134,7 @@ class TrassirNvrController extends AbstractController
             }
         }
         ksort($trassirUsersData);
-        
+
         return $this->render('trassir/trassirusersList.html.twig', [
             //'trassirNvrDataList' => $trassirNvrDataList,
             'nvrList'=>$trassirNvrList,

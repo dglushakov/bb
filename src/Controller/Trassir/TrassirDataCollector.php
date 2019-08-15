@@ -46,6 +46,8 @@ class TrassirDataCollector extends AbstractController
 
         if($trassirServer->getServerObjects()){
             $trassirNvrData->setObjects($trassirServer->getServerObjects());
+            $trassirNvr->setName($trassirServer->getName());
+            $trassirNvr->setGuid($trassirServer->getGuid());
         } else {
             $result= false;
             $trassirNvrData->setObjects([
@@ -58,8 +60,7 @@ class TrassirDataCollector extends AbstractController
         $em->persist($trassirNvrData);
 
         $trassirNvr->setLastHealthAndDataCollectedAt(new \DateTime());
-        $trassirNvr->setName($trassirServer->getName());
-        $trassirNvr->setGuid($trassirServer->getGuid());
+
         $em->persist($trassirNvr);
 
         $em->flush();
