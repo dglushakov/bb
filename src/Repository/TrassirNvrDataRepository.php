@@ -19,6 +19,18 @@ class TrassirNvrDataRepository extends ServiceEntityRepository
         parent::__construct($registry, TrassirNvrData::class);
     }
 
+    public function getFreshData(){
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.dateTime > :dateTime')
+            ->setParameter('dateTime', new \DateTime('-7 days'))
+            ->orderBy('t.trassirNvrId', 'ASC')
+            ->orderBy('t.dateTime', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return TrassirNvrData[] Returns an array of TrassirNvrData objects
     //  */
