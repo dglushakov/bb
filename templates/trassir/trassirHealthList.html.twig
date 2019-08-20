@@ -25,7 +25,7 @@
                     <th>
                         Online
                     </th>
-                    {% for point in healthPoints %}
+                    {% for point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
                         <th>
                             {{ point }}
                         </th>
@@ -46,7 +46,7 @@
                         <td><img src="{{ online?asset('img/poweron32.png'):asset('img/poweroff32.png') }}"
                                  alt="Online status image" width="20px">
                         </td>
-                        {% for pointKey, point in healthPoints %}
+                        {% for pointKey, point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
                             <td>
                                 {% if trassirHealth[server.id].health[pointKey] is defined %}
 

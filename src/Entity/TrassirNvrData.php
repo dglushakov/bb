@@ -9,6 +9,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TrassirNvrData
 {
+    const HEALTH_POINTS=[
+    'disks'=>'Disks',
+    'uptime'=>'Uptime',
+    'network'=>'Network',
+    'cpu_load'=>'CPU Load',
+    'database'=>'Database',
+    'automation'=>'Automation',
+    'channels_total'=>'Channels Total',
+    'channels_online'=>'Channels Online',
+    'disks_stat_main_days'=>'Archive Main',
+    'disks_stat_subs_days'=>'Archive Sub',
+        ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
