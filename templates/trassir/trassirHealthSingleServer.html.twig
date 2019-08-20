@@ -1,6 +1,7 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
+
     <div class="row">
         <div class="col text-center">
             <h2>{{ (server.name is defined) ? server.name : server.ip }}</h2>
@@ -21,10 +22,87 @@
 
                 {% for healthDate, trassirHealthData in trassirHealth %}
                     <tr>
-                        <td>{{healthDate}}</td>
+                        <td>{{ healthDate }}</td>
 
-                        {% for healthParameter in trassirHealthData %}
-                            <td>{{ healthParameter }}</td>
+                        {% for healthParameterKey, healthParameter in trassirHealthData %}
+                            {% if healthParameterKey != 'disks_stat_priv_days' %}
+                                <td>
+                                    {% if healthParameterKey == 'disks'
+                                        or healthParameterKey == 'database'
+                                        or healthParameterKey == 'automation'
+                                        or healthParameterKey == 'network' %}
+                                        {% if  healthParameter==1 %}
+                                            <div class="text-success">OK</div>
+                                        {% else %}
+                                            <div class="text-danger">KO</div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if healthParameterKey == 'cpu_load' %}
+                                        {% if healthParameter>=50 %}
+                                            <div class="text-danger">{{ healthParameter~'%' }}</div>
+                                        {% elseif healthParameterKey>30 and healthParameterKey<50 %}
+                                            <div class="text-warning">{{ healthParameter~'%' }}</div>
+                                        {% else %}
+                                            <div class="text-success">{{ healthParameter~' %' }}</div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if healthParameterKey == 'uptime' %}
+                                        {% set days = healthParameter//86400 %}
+                                        {% set hours = (healthParameter - days*86400)//3600 %}
+                                        {% set minutes = (healthParameter - days*86400 - hours*3600)//60 %}
+
+                                        {% set uptime='' %}
+                                        {% if days >0 %} {% set uptime =uptime ~ days~' days ' %} {% endif %}
+                                        {% if hours >0 %} {% set uptime =uptime ~ hours~' hours ' %} {% endif %}
+                                        {% if minutes >0 %} {% set uptime =uptime ~ minutes~' minutes' %} {% endif %}
+
+                                        {% if days <1 %}
+                                            <div class="text-danger">{{ uptime|trim }}</div>
+                                        {% elseif days <3 %}
+                                            <div class="text-warning">{{ uptime|trim }}</div>
+                                        {% else %}
+                                            <div class="text-success">{{ uptime|trim }}</div>
+                                        {% endif %}
+                                    {% endif %}
+
+
+                                    {% if healthParameterKey == 'channels_total' %}
+                                        {{ healthParameter }}
+                                    {% endif %}
+
+                                    {% if healthParameterKey == 'channels_online' %}
+                                        {% if healthParameter!=trassirHealthData['channels_total'] %}
+                                            <div class="text-danger">{{ healthParameter }}</div>
+                                        {% else %}
+                                            <div class="text-success">{{ healthParameter }}</div>
+                                        {% endif %}
+                                    {% endif %}
+
+
+                                    {% if healthParameterKey == 'disks_stat_main_days' %}
+                                        {% if healthParameter <= 14 %}
+                                            <div class="text-danger">{{ healthParameter }}</div>
+                                        {% elseif healthParameter > 14 and healthParameter <=30 %}
+                                            <div class="text-warning">{{ healthParameter }}</div>
+                                        {% else %}
+                                            <div class="text-success">{{ healthParameter }}</div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if healthParameterKey == 'disks_stat_subs_days' %}
+                                        {% if healthParameter <= 14 %}
+                                            <div class="text-danger">{{ healthParameter }}</div>
+                                        {% elseif healthParameter > 14 and healthParameter <=30 %}
+                                            <div class="text-warning">{{ healthParameter }}</div>
+                                        {% else %}
+                                            <div class="text-success">{{ healthParameter }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                </td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}

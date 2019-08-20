@@ -1,18 +1,5 @@
 {% extends 'home.html.twig' %}
 
-{% set healthPoints={
-    'disks':'Disks',
-    'uptime':'Uptime',
-    'network':'Network',
-    'cpu_load':'CPU Load',
-    'database':'Database',
-    'automation':'Automation',
-    'channels_total':'Channels Total',
-    'channels_online':'Channels Online',
-    'disks_stat_main_days':'Archive Main',
-    'disks_stat_subs_days':'Archive Sub',
-    'disks_stat_priv_days':'Archive Priv',
-} %}
 {% block main %}
     <div class="row">
         <div class="col">
@@ -64,7 +51,7 @@
                                         {% elseif trassirHealth[server.id].health[pointKey]>30 and trassirHealth[server.id].health[pointKey]<50 %}
                                             <div class="text-warning">{{ trassirHealth[server.id].health[pointKey]~'%' }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey]~'%' }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey]~' %' }}</div>
                                         {% endif %}
                                     {% endif %}
 
