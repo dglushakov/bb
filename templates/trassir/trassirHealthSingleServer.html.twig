@@ -1,9 +1,6 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
-    {{ dump(server) }}
-    {{ dump(trassirHealth) }}
-
     <div class="row">
         <div class="col text-center">
             <h2>{{ (server.name is defined) ? server.name : server.ip }}</h2>
