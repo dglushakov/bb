@@ -42,7 +42,7 @@
                         {% set online = false %}
                     {% endif %}
                     <tr>
-                        <td>{{ server.name ?  server.name : server.ip }}</td>
+                        <td><a href="{{path('trassirHealthSingleNvr',{'id':server.id})}}">{{ server.name ?  server.name : server.ip }}</a></td>
                         <td><img src="{{ online?asset('img/poweron32.png'):asset('img/poweroff32.png') }}"
                                  alt="Online status image" width="20px">
                         </td>
