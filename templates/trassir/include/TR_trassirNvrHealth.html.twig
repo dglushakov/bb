@@ -1,0 +1,122 @@
+{% for healthDate, trassirHealthData in trassirHealth %}
+    {% set data_number = loop.index %}
+    <tr>
+        <td>{{ healthDate }}</td>
+
+
+        {% for healthParameterKey, healthParameter in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
+            {% if healthParameterKey != 'disks_stat_priv_days' %}
+                <td>
+                    {% if healthParameterKey == 'disks'
+                        or healthParameterKey == 'database'
+                        or healthParameterKey == 'automation'
+                        or healthParameterKey == 'network' %}
+                        {% if  trassirHealthData[healthParameterKey]==1 %}
+                            <div class="text-success">OK</div>
+                        {% else %}
+                            <div class="text-danger">KO</div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if healthParameterKey == 'cpu_load' %}
+                        {% set cpu_load = trassirHealthData['cpu_load']~' %' %}
+                        {% if healthParameter>=50 %}
+                            <div class="text-danger">{{ cpu_load }}</div>
+                        {% elseif healthParameterKey>30 and healthParameterKey<50 %}
+                            <div class="text-warning">{{ cpu_load }}</div>
+                        {% else %}
+                            <div class="text-success">{{ cpu_load }}</div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if healthParameterKey == 'uptime' %}
+                        {% set uptime_param =  trassirHealthData['uptime'] %}
+                        {% set days = uptime_param//86400 %}
+                        {% set hours = (uptime_param - days*86400)//3600 %}
+                        {% set minutes = (uptime_param - days*86400 - hours*3600)//60 %}
+
+                        {% set uptime='' %}
+                        {% if days >0 %} {% set uptime =uptime ~ days~' days ' %} {% endif %}
+                        {% if hours >0 %} {% set uptime =uptime ~ hours~' hours ' %} {% endif %}
+                        {% if minutes >0 %} {% set uptime =uptime ~ minutes~' minutes' %} {% endif %}
+
+                        {% if days <1 %}
+                            <div class="text-danger">{{ uptime|trim }}</div>
+                        {% elseif days <3 %}
+                            <div class="text-warning">{{ uptime|trim }}</div>
+                        {% else %}
+                            <div class="text-success">{{ uptime|trim }}</div>
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% if healthParameterKey == 'channels_total' %}
+                        {{ trassirHealthData[healthParameterKey] }}
+                        <button type="button" class="btn" data-toggle="collapse"
+                                data-target=".channelhealth{{ data_number }}">
+                            <img src="{{ asset('img/expand_arrow_24.png') }}">
+                        </button>
+                    {% endif %}
+
+                    {% if healthParameterKey == 'channels_online' %}
+                        {% if trassirHealthData[healthParameterKey]!=trassirHealthData['channels_total'] %}
+                            <div class="text-danger">{{ trassirHealthData[healthParameterKey] }}</div>
+                        {% else %}
+                            <div class="text-success">{{ trassirHealthData[healthParameterKey] }}</div>
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% if healthParameterKey == 'disks_stat_main_days' %}
+                        {% set disks_stat_main_days = trassirHealthData['disks_stat_main_days'] %}
+                        {% if disks_stat_main_days <= 14 %}
+                            <div class="text-danger">{{ disks_stat_main_days }}</div>
+                        {% elseif disks_stat_main_days > 14 and disks_stat_main_days <=30 %}
+                            <div class="text-warning">{{ disks_stat_main_days }}</div>
+                        {% else %}
+                            <div class="text-success">{{ disks_stat_main_days }}</div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if healthParameterKey == 'disks_stat_subs_days' %}
+                        {% set disks_stat_subs_days = trassirHealthData['disks_stat_subs_days'] %}
+                        {% if disks_stat_subs_days <= 14 %}
+                            <div class="text-danger">{{ disks_stat_subs_days }}</div>
+                        {% elseif disks_stat_subs_days > 14 and disks_stat_subs_days <=30 %}
+                            <div class="text-warning">{{ disks_stat_subs_days }}</div>
+                        {% else %}
+                            <div class="text-success">{{ disks_stat_subs_days }}</div>
+                        {% endif %}
+                    {% endif %}
+
+                </td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+
+    {% if trassirHealthData['channels_health'] is defined %}
+        {% for cahnnelHealth in trassirHealthData['channels_health'] %}
+            {% if cahnnelHealth.signal==1 %}
+                {% set channel_status = "success" %}
+            {% else %}
+                {% set channel_status = "danger" %}
+            {% endif %}
+
+            <tr class="collapse channelhealth{{ data_number }}">
+                {% for i in 1..7 %}
+                    <td></td>
+                {% endfor %}
+                <td class="text-{{ channel_status }}">
+                    {{ cahnnelHealth.name }}
+                </td>
+                <td class="text-{{ channel_status }}">
+                    {{ cahnnelHealth.signal==1?"OK":"KO" }}
+                </td>
+                {% for i in 1..2 %}
+                    <td></td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+{% endfor %}
