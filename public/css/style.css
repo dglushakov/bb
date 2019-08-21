@@ -14,11 +14,3 @@ th.tex-vertical > div > span {
     border-bottom: 1px solid #ccc;
     padding: 5px 10px;
 }
-
-.tableFixHead          { overflow-y: auto; height:80%; }
-.tableFixHead thead th { position: sticky; top: 0; }
-
-/* Just common table stuff. Really. */
-table  { border-collapse: collapse; width: 100%; }
-th, td { padding: 8px 16px; }
-th     { background:#eee; }
