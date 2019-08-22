@@ -3,23 +3,24 @@
 {% block main %}
     <div class="row">
         <div class="col">
+
             <table class="table table-striped table-bordered mt-4">
                 <thead>
-                <tr>
-                    <th>
+                <tr class="tr_fixed">
+                    <th class="tr_fixed">
                         #
                     </th>
-                    <th>
+                    <th class="tr_fixed">
                         Online
                     </th>
                     {% for point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
-                        <th>
+                        <th class="tr_fixed">
                             {{ point }}
                         </th>
                     {% endfor %}
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="pt-5">
                 {% for server in servers %}
                     {% if trassirHealth[server.id].health is defined
                         and (trassirHealth[server.id].health['network'] is defined
