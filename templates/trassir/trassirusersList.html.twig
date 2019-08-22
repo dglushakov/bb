@@ -4,15 +4,15 @@
     <table class="table table-striped mt-4">
         <thead>
         <tr>
-            <th>
+            <th class="tr_fixed">
                 #
             </th>
-            <th>
+            <th class="tr_fixed">
                 Login
             </th>
             {% for key, nvr in nvrList %}
                 {% if nvr.Id is defined %}
-                    <th class="col text-nowrap tex-vertical">
+                    <th class="col text-nowrap tex-vertical tr_fixed">
                         <div><span>
                             {% if nvr.name is defined and nvr.name!="" %}
                                 {{ nvr.name }}
