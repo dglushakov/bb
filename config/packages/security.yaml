@@ -37,5 +37,5 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER, ROLE_USERS_EDIT]
-        ROLE_USER: [ROLE_USER]
+        ROLE_USER: [ROLE_USER, ROLE_NVR_LIST]
         ROLE_USERS_EDIT: [ROLE_USERS_VIEW, ROLE_USERS_DELETE]

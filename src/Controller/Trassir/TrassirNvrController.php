@@ -22,7 +22,7 @@ class TrassirNvrController extends AbstractController
      */
     public function trassirNvrList(Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NVR_LIST');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
 
