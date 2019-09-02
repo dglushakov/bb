@@ -3,9 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FacilityRepository")
+ * @UniqueEntity(
+ *     fields={"city", "street", "house"},
+ *     errorPath="house",
+ *     message="Division already exist"
+ *    )
  */
 class Facility
 {
