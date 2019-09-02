@@ -40,18 +40,22 @@ class AddFacilityForm extends AbstractType
             ->add('Region', TextType::class, [
                 'required' => true,
                 'label' => 'Область',
+                'attr' => array( 'class' => 'text-capitalize' ),
             ])
             ->add('City', TextType::class, [
                 'required' => true,
                 'label' => 'Город',
+                'attr' => array( 'class' => 'text-capitalize' ),
             ])
             ->add('Street', TextType::class, [
                 'required' => true,
                 'label' => 'Улица',
+                'attr' => array( 'class' => 'text-capitalize' ),
             ])
             ->add('House', TextType::class, [
                 'required' => false,
                 'label' => 'Дом',
+                'attr' => array( 'class' => 'text-capitalize' ),
             ])
             ->add('Submit', SubmitType::class);
     }

@@ -46,6 +46,8 @@ class FacilityController extends AbstractController
             $newFacility = $addFacilityForm->getData();
             if(!$newFacility->getName()){
                 $newFacility->setName($newFacility->getCity().' '.$newFacility->getStreet());
+
+
             }
 
             $em->persist($newFacility);
