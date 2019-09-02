@@ -44,6 +44,11 @@ class TrassirNvr
      */
     private $lastHealthAndDataCollectedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Facility", fetch="EAGER")
+     */
+    private $facility;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +98,18 @@ class TrassirNvr
     public function setLastHealthAndDataCollectedAt(?\DateTimeInterface $lastHealthAndDataCollectedAt): self
     {
         $this->lastHealthAndDataCollectedAt = $lastHealthAndDataCollectedAt;
+
+        return $this;
+    }
+
+    public function getFacility(): ?Facility
+    {
+        return $this->facility;
+    }
+
+    public function setFacility(?Facility $facility): self
+    {
+        $this->facility = $facility;
 
         return $this;
     }

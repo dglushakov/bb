@@ -1,0 +1,21 @@
+{% extends 'home.html.twig' %}
+
+
+{% block main %}
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Edit Facility </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light">
+            {% form_theme editFacilityForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(editFacilityForm) }}
+            {{ form_widget(editFacilityForm) }}
+            <a href="{{ path('facilitylist') }}" class="btn btn-danger">Cancel</a>
+            {{ form_end(editFacilityForm) }}
+        </div>
+    </div>
+
+{% endblock %}

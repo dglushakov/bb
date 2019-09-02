@@ -70,6 +70,7 @@ class TrassirNvrController extends AbstractController
 
         return $this->render('trassir/editTrassirNvr.html.twig', [
             'editTrassirNvrForm' => $EditTrassirNvrForm->createView(),
+            'server'=>$trassirNvrToEdit,
         ]);
     }
 
