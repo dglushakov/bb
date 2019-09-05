@@ -5,17 +5,18 @@ namespace App\Controller\Facility\Forms;
 
 
 use App\Entity\Facility;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditFacilityForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $streetTypes = array_flip(Facility::getStreetTypes());
 
         $builder
             ->add('Name', TextType::class, [
@@ -27,36 +28,42 @@ class EditFacilityForm extends AbstractType
                 'label' => 'Индекс',
             ])
             ->add('StreetType', ChoiceType::class, [
-                'choices' => $streetTypes,
+                'choices' => array_flip(Facility::getStreetTypes()),
                 'label' => 'Тип улицы',
                 'required' => true,
                 'attr' => array('style' => 'width: 150px')
             ])
-            ->add('Country', ChoiceType::class, [
-                'choices' => Facility::COUNTRIES,
-                'label' => 'Страна',
-                'required' => true,
-            ])
-            ->add('Region', TextType::class, [
-                'required' => true,
-                'label' => 'Область',
-                'attr' => array( 'class' => 'text-capitalize' ),
-            ])
-            ->add('City', TextType::class, [
-                'required' => true,
-                'label' => 'Город',
-                'attr' => array( 'class' => 'text-capitalize' ),
-            ])
             ->add('Street', TextType::class, [
                 'required' => true,
                 'label' => 'Улица',
-                'attr' => array( 'class' => 'text-capitalize' ),
+                'attr' => array('class' => 'text-capitalize'),
             ])
             ->add('House', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Дом',
-                'attr' => array( 'class' => 'text-capitalize' ),
+            ])
+            ->add('BuildingType', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Тип строения',
+                'choices' => array_flip(Facility::getBuildingTypes())
+            ])
+            ->add('Building', TextType::class, [
+                'required' => false,
+                'label' => 'Строение',
+            ])
+            ->add('Room', TextType::class, [
+                'required' => false,
+                'label' => 'Помещение',
             ])
             ->add('Submit', SubmitType::class);
+
     }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Facility::class,
+        ]);
+    }
+
 }
