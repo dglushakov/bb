@@ -62,7 +62,18 @@ class TrassirNvrController extends AbstractController
         $EditTrassirNvrForm = $this->createForm(EditTrassirNvrForm::class, $trassirNvrToEdit);
         $EditTrassirNvrForm->handleRequest($request);
         if ($EditTrassirNvrForm->isSubmitted() && $EditTrassirNvrForm->isValid()) {
+
+            /** @var TrassirNvr $trassirNvrToEdit */
             $trassirNvrToEdit = $EditTrassirNvrForm->getData();
+
+            /** @var TrassirNvr $formData */
+            $formData = $request->request->get('edit_trassir_nvr_form');
+            if($formData['Facility']=='') {
+                $trassirNvrToEdit->setFacility(null);
+            }
+
+
+            //dd($trassirNvrToEdit);
             $em->persist($trassirNvrToEdit);
             $em->flush();
             return $this->redirectToRoute('nvrList');
