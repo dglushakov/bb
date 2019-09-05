@@ -74,6 +74,8 @@ class Facility
     public function getAddress()
     {
         $this->country == 'Russia' ? $country = 'Россия ' : $country = '';
+        $this->country == 'Belarus' ? $country = 'Белоруссия ' : $country = '';
+
         if (isset($this->streetType)) {
             $strType = self::getStreetTypes()["$this->streetType"];
         } else {
