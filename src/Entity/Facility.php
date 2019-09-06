@@ -89,7 +89,7 @@ class Facility
             $strType = '';
         }
 
-        return $country .' '. $this->city . ' ' . $strType . ' ' . $this->street . ' ' . $this->house;
+        return $country .', '. $this->city . ', ' . $strType . ' ' . $this->street . ', ' . $this->house;
     }
 
     /**
