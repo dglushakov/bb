@@ -73,8 +73,15 @@ class Facility
      */
     public function getAddress()
     {
-        $this->country == 'Russia' ? $country = 'Россия ' : $country = '';
-        $this->country == 'Belarus' ? $country = 'Белоруссия ' : $country = '';
+        switch ($this->country) {
+            case 'Russia':
+                $country = 'Россия';
+                break;
+            case 'Belarus':
+                $country = 'Белоруссия';
+                break;
+        }
+
 
         if (isset($this->streetType)) {
             $strType = self::getStreetTypes()["$this->streetType"];
@@ -82,7 +89,7 @@ class Facility
             $strType = '';
         }
 
-        return $country . $this->city . ' ' . $strType . ' ' . $this->street . ' ' . $this->house;
+        return $country .' '. $this->city . ' ' . $strType . ' ' . $this->street . ' ' . $this->house;
     }
 
     /**
