@@ -25,9 +25,9 @@ class EditTrassirNvrForm extends AbstractType
                 'required' => false,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
-                        ->orderBy('u.country', 'ASC')
-                        ->orderBy('u.city', 'ASC')
-                        ->orderBy('u.street', 'ASC');
+                        ->addOrderBy('u.country', 'ASC')
+                        ->addOrderBy('u.city', 'ASC')
+                        ->addOrderBy('u.street', 'ASC');
                 },
             ]);
     }
