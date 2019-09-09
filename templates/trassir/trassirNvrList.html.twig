@@ -2,16 +2,17 @@
 
 {% block main %}
     <h1 class="text-center">Trassir servers</h1>
-
-    <div class="row bg-light p-2">
-        <div class="col">
-            {% form_theme addNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
-            {{ form_start(addNvrForm) }}
-            {{ form_widget(addNvrForm) }}
-            <input type="submit" class="btn btn-success" value="Add new"/>
-            {{ form_end(addNvrForm) }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="row bg-light p-2">
+            <div class="col">
+                {% form_theme addNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
+                {{ form_start(addNvrForm) }}
+                {{ form_widget(addNvrForm) }}
+                <input type="submit" class="btn btn-success" value="Add new"/>
+                {{ form_end(addNvrForm) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
     <div class="row">
         <div class="col">
 
