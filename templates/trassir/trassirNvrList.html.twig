@@ -1,68 +1,8 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
-    <h1>Trassir servers</h1>
-    <div class="row border-bottom">
-        <div class="col ">
-            #
-        </div>
-        <div class="col-5">
-            Address
-        </div>
-        <div class="col ">
-            Ip
-        </div>
-        <div class="col ">
-            Name
-        </div>
-        {% if is_granted('ROLE_ADMIN') %}
-            <div class="col ">
-                Refresh/Edit/Delete
-            </div>
-        {% endif %}
-    </div>
+    <h1 class="text-center">Trassir servers</h1>
 
-    {% for server in servers %}
-
-        <div class="row bg-light p-2 border-bottom">
-            <div class="col">
-                {{ loop.index }}
-            </div>
-            <div class="col-5">
-                {{ server.facility is not null? server.facility.address : '' }}
-            </div>
-            <div class="col">
-                {{ server.ip }}
-            </div>
-            <div class="col">
-                {{ server.name }}
-            </div>
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="col">
-                    <a href="/trassirdatacollect/{{ server.id }}" class="btn btn-sm trassirDataRefresh"><img
-                                alt="edit"
-                                width="20px"
-                                id="refreshButton{{ server.id }}"
-                                class="refreshButtonImage"
-                                src="{{ asset('img/refresh.png') }}">
-                    </a>
-
-                    <a href="/trassirNvr/edit/{{ server.id }}" class="btn btn-sm"><img
-                                alt="edit"
-                                width="20px"
-                                src="{{ asset('img/edit.png') }}">
-                    </a>
-
-                    <a href="#" data-href="/trassirNvr/delete/{{ server.id }}" data-toggle="modal"
-                       data-target="#confirm-delete" class="btn btn-sm delete-type">
-                        <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-    {% endfor %}
-    {% include 'include/deleteConfirmationModal.html.twig' %}
-    <hr>
     <div class="row bg-light p-2">
         <div class="col">
             {% form_theme addNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
@@ -72,6 +12,73 @@
             {{ form_end(addNvrForm) }}
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="tr_fixed">#</th>
+                    <th class="tr_fixed">Адрес</th>
+                    <th class="tr_fixed">IP</th>
+                    <th class="tr_fixed">Имя</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="tr_fixed">Редактирование</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for server in servers %}
+
+                    <tr>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+                        <td>
+                            {{ server.facility is not null? server.facility.address : '' }}
+                        </td>
+                        <td>
+                            {{ server.ip }}
+                        </td>
+                        <td>
+                            {{ server.name }}
+                        </td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                <a href="/trassirdatacollect/{{ server.id }}" class="btn btn-sm trassirDataRefresh"><img
+                                            alt="edit"
+                                            width="20px"
+                                            id="refreshButton{{ server.id }}"
+                                            class="refreshButtonImage"
+                                            src="{{ asset('img/refresh.png') }}">
+                                </a>
+
+                                <a href="/trassirNvr/edit/{{ server.id }}" class="btn btn-sm"><img
+                                            alt="edit"
+                                            width="20px"
+                                            src="{{ asset('img/edit.png') }}">
+                                </a>
+
+                                <a href="#" data-href="/trassirNvr/delete/{{ server.id }}" data-toggle="modal"
+                                   data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                    <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    {% include 'include/deleteConfirmationModal.html.twig' %}
+
+
 {% endblock %}
 
 {% block javascriptsAfterBody %}
@@ -79,7 +86,7 @@
 
     <script>
         $('#confirm-delete').on('show.bs.modal', function (e) {
-                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
         });
     </script>
     <script>
