@@ -27,13 +27,15 @@
                         Users
                     </a>
                 </li>
-
-
+            {% endif %}
+            {% if is_granted('ROLE_NVR_LIST') %}
                 <li class="list-group-item list-group-item-action">
                     <a href="{{ path('trassirHealthList') }}" class="stretched-link text-dark">
                         Trassir Health
                     </a>
                 </li>
+            {% endif %}
+            {% if is_granted('ROLE_NVR_HEALTH_LIST') %}
                 <li class="list-group-item list-group-item-action">
                     <a href="{{ path('facilitylist') }}" class="stretched-link text-dark">
                         Facilities

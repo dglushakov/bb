@@ -53,7 +53,7 @@ class TrassirNvrController extends AbstractController
      */
     public function editTrassirNvr(EntityManagerInterface $em, Request $request, $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NVR_EDIT');
         //$this->denyAccessUnlessGranted('ROLE_USERS_EDIT');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrToEdit = $trassirNvrRepo->find($id);
@@ -91,7 +91,7 @@ class TrassirNvrController extends AbstractController
      */
     public function deleteTrassirNvr(EntityManagerInterface $em, $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NVR_DELETE');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrToDelete = $trassirNvrRepo->find($id);
 

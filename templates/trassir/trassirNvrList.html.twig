@@ -2,7 +2,7 @@
 
 {% block main %}
     <h1 class="text-center">Trassir servers</h1>
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_NVR_ADD') %}
         <div class="row bg-light p-2">
             <div class="col">
                 {% form_theme addNvrForm 'bootstrap_4_horizontal_layout.html.twig' %}
@@ -23,7 +23,7 @@
                     <th class="tr_fixed">Адрес</th>
                     <th class="tr_fixed">IP</th>
                     <th class="tr_fixed">Имя</th>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_NVR_EDIT') %}
                         <th class="tr_fixed">Редактирование</th>
                     {% endif %}
                 </tr>
@@ -45,7 +45,7 @@
                         <td>
                             {{ server.name }}
                         </td>
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_NVR_EDIT') %}
                             <td>
                                 <a href="/trassirdatacollect/{{ server.id }}" class="btn btn-sm trassirDataRefresh"><img
                                             alt="edit"

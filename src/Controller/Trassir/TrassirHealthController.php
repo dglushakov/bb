@@ -16,7 +16,7 @@ class TrassirHealthController extends AbstractController
      * @Route("/trassirHealthList", name="trassirHealthList")
      */
     public function trassirHealthList(){
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NVR_HEALTH_LIST');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
 
@@ -39,7 +39,7 @@ class TrassirHealthController extends AbstractController
      * @Route("/trassirHealthSingleNvr/{id}", name="trassirHealthSingleNvr")
      */
     public function trassirHealthSingleNvr($id){
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NVR_HEALTH_LIST');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvr=$trassirNvrRepo->findOneBy(['id'=>$id]);
 

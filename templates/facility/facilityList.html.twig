@@ -1,64 +1,65 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
-    <div class="row bg-light p-2">
+    {% if is_granted('ROLE_NVR_ADD') %}
+        <div class="row bg-light p-2">
+            <div class="col">
+                {% form_theme form 'bootstrap_4_layout.html.twig' %}
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.Name) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.PostCode) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.Country) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.Region) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.City) }}
+                    </div>
+                    <div class="col"></div>
 
-        <div class="col">
-            {% form_theme form 'bootstrap_4_layout.html.twig' %}
-            {{ form_start(form) }}
-            {{ form_errors(form) }}
-            <div class="row">
-                <div class="col">
-                    {{ form_row(form.Name) }}
                 </div>
-                <div class="col">
-                    {{ form_row(form.PostCode) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.Country) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.Region) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.City) }}
-                </div>
-                <div class="col"></div>
+                <div class="row">
 
+                    <div class="col">
+                        {{ form_row(form.StreetType) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.Street) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.House) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.BuildingType) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.Building) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.Room) }}
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.Submit, { 'label': 'Add new' }) }}
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+
+                {{ form_end(form) }}
             </div>
-            <div class="row">
-
-                <div class="col">
-                    {{ form_row(form.StreetType) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.Street) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.House) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.BuildingType) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.Building) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.Room) }}
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col">
-                    {{ form_row(form.Submit, { 'label': 'Add new' }) }}
-                </div>
-                <div class="col"></div>
-                <div class="col"></div>
-            </div>
-
-            {{ form_end(form) }}
         </div>
-    </div>
+    {% endif %}
     <div class="row">
         <div class="col">
 
@@ -70,7 +71,7 @@
                     </th>
                     <th class="tr_fixed">
                         Name
-                    </th >
+                    </th>
                     <th class="tr_fixed">
                         Address
                     </th>
@@ -93,10 +94,10 @@
                             </a>
 
                             {% if nvrCount[facility.id]==0 %}
-                            <a href="#" data-href="/facility/delete/{{ facility.id }}" data-toggle="modal"
-                               data-target="#confirm-delete" class="btn btn-sm delete-type">
-                                <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
-                            </a>
+                                <a href="#" data-href="/facility/delete/{{ facility.id }}" data-toggle="modal"
+                                   data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                    <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                                </a>
                             {% endif %}
                         </td>
                     </tr>
@@ -113,50 +114,54 @@
 {% block javascriptsAfterBody %}
     {{ parent() }}
 
-<script>
-    $('#confirm-delete').on('show.bs.modal', function (e) {
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
             $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-    });
+        });
 
-    $('#add_facility_form_Region').prop("readonly", true);
+        $('#add_facility_form_Region').prop("readonly", true);
 
-    $('#add_facility_form_Country').on('change', function (data) {
-        var optionSelected = $(this).find("option:selected");
-        var textSelected   = optionSelected.text();
+        $('#add_facility_form_Country').on('change', function (data) {
+            var optionSelected = $(this).find("option:selected");
+            var textSelected = optionSelected.text();
 
-        var path ='{{ path('getCities') }}';
-        path = path + '/' + textSelected;
-        $.ajax({
-            method: "POST",
-            url: path,
+            var path = '{{ path('getCities') }}';
+            path = path + '/' + textSelected;
+            $.ajax({
+                method: "POST",
+                url: path,
 
-        }).done(function (data) {
-            $('#add_facility_form_City').empty();
-            $.each(data, function(val, text) {
-                $('#add_facility_form_City').append(
-                    $('<option></option>').val(text['city']).html(text['city']+' регион: ' +text['region'])
-                );
-            });
-        })
-    });
+            }).done(function (data) {
+                $('#add_facility_form_City').empty();
+                $.each(data, function (val, text) {
+                    $('#add_facility_form_City').append(
+                        $('<option></option>').val(text['city']).html(text['city'] + ' регион: ' + text['region'])
+                    );
+                });
+            })
+        });
 
-    $('#add_facility_form_City').on('change', function (data) {
-        var region =$(this).children("option:selected").val();
-        region =$(this).children("option:selected").html();
+        $('#add_facility_form_City').on('change', function (data) {
+            var region = $(this).children("option:selected").val();
+            region = $(this).children("option:selected").html();
 
-        var regionStartPostition = region.indexOf('регион') + 8;
-        var regionToOutput = region.slice(regionStartPostition);
+            var regionStartPostition = region.indexOf('регион') + 8;
+            var regionToOutput = region.slice(regionStartPostition);
 
-        $("#add_facility_form_Region").val(regionToOutput);
-    });
+            $("#add_facility_form_Region").val(regionToOutput);
+        });
 
 
-    $body = $("body");
-    $(document).on({
-        ajaxStart: function() { $body.addClass("loading");    },
-        ajaxStop: function() { $body.removeClass("loading"); }
-    });
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () {
+                $body.addClass("loading");
+            },
+            ajaxStop: function () {
+                $body.removeClass("loading");
+            }
+        });
 
-</script>
+    </script>
 
 {% endblock %}

@@ -21,6 +21,7 @@ class EditUserForm extends AbstractType
     {
         $userRoles=[
             'Admin' => 'ROLE_ADMIN',
+            'Security Specialist' => 'ROLE_SECURITYDEPARTMENT_USER',
             'User' => 'ROLE_USER',
         ];
         $builder
