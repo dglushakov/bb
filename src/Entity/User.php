@@ -51,7 +51,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     public function setUsername(string $username): self
@@ -85,7 +85,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -110,5 +110,16 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public static function getUserRoles()
+    {
+        $userRoles=[
+            'Admin' => 'ROLE_ADMIN',
+            'Security Specialist' => 'ROLE_SECURITYDEPARTMENT_USER',
+            'User' => 'ROLE_USER',
+        ];
+
+        return $userRoles;
     }
 }

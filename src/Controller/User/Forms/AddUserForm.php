@@ -4,6 +4,7 @@
 namespace App\Controller\User\Forms;
 
 
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -23,10 +24,7 @@ class AddUserForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $userRoles = [
-            'Admin' => 'ROLE_ADMIN',
-            'USER' => 'ROLE_USER',
-        ];
+        $userRoles= User::getUserRoles();
 
         $builder
             ->add('UserName', TextType::class, [

@@ -3,6 +3,7 @@
 
 namespace App\Controller\User\Forms;
 
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,11 +20,8 @@ class EditUserForm extends AbstractType
     }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $userRoles=[
-            'Admin' => 'ROLE_ADMIN',
-            'Security Specialist' => 'ROLE_SECURITYDEPARTMENT_USER',
-            'User' => 'ROLE_USER',
-        ];
+        $userRoles= User::getUserRoles();
+
         $builder
             ->add('UserName', TextType::class,[
                 'required'=>true,
