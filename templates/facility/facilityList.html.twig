@@ -108,8 +108,9 @@
         </div>
     </div>
 
-    <div class="ajax_wait"><!-- Place at bottom of page --></div>
+
 {% endblock %}
+
 
 {% block javascriptsAfterBody %}
     {{ parent() }}
@@ -151,16 +152,6 @@
             $("#add_facility_form_Region").val(regionToOutput);
         });
 
-
-        $body = $("body");
-        $(document).on({
-            ajaxStart: function () {
-                $body.addClass("loading");
-            },
-            ajaxStop: function () {
-                $body.removeClass("loading");
-            }
-        });
 
     </script>
 
