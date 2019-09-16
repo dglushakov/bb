@@ -1,0 +1,29 @@
+{% extends 'home.html.twig' %}
+
+
+{% block main %}
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Edit alarm system</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light">
+            {% form_theme editAlarmSystemForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(editAlarmSystemForm) }}
+            {{ form_widget(editAlarmSystemForm) }}
+
+            <a href="{{ path('alarmList') }}" class="btn btn-danger">Cancel</a>
+
+            {{ form_end(editAlarmSystemForm) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+
+{% endblock %}

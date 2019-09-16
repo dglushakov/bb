@@ -4,8 +4,11 @@
 namespace App\Controller\Equipment;
 
 
+use App\Controller\Equipment\Form\AddAlarmSystemForm;
 use App\Controller\Equipment\Form\AddSafeForm;
+use App\Entity\AlarmSystem;
 use App\Entity\Safe;
+use App\Repository\AlarmSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,5 +86,89 @@ class SecurityDevicesController extends AbstractController
         }
 
         return $this->redirectToRoute('safesList');
+    }
+
+
+    /**
+     * @Route("/alarmList", name="alarmList")
+     */
+    public function alarmList(Request $request, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_SECURITY_DEVICES');
+
+        $alarmSystem = new AlarmSystem();
+        $alarmSystem->setPkp(0);
+        $alarmSystem->setKeyboard(0);
+        $alarmSystem->setMotionSensor(0);
+        $alarmSystem->setFireSensor(0);
+        $alarmSystem->setDoorSensor(0);
+        $alarmSystem->setStationaryButton(0);
+        $alarmSystem->setWearableButton(0);
+        $addAlarmSystemForm = $this->createForm(AddAlarmSystemForm::class, $alarmSystem);
+        $addAlarmSystemForm->handleRequest($request);
+
+
+        if ($addAlarmSystemForm->isSubmitted() && $addAlarmSystemForm->isValid()) {
+            $newAlarmSysem = $addAlarmSystemForm->getData();
+            $em->persist($newAlarmSysem);
+            $em->flush();
+        }
+
+        $alarmSystemsRepo = $this->getDoctrine()->getRepository(AlarmSystem::class);
+        $alarmSystemsList = $alarmSystemsRepo->findAll();
+
+        return $this->render('equipment/alarmList.html.twig', [
+            'alarmSystemsList' => $alarmSystemsList,
+            'addAlarmSystemForm' => $addAlarmSystemForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/alarm/edit/{id}", name="editAlarm")
+     */
+    public function alarmEdit(Request $request, EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_SECURITY_DEVICES_EDIT');
+
+        $alarmSystemsRepo = $this->getDoctrine()->getRepository(AlarmSystem::class);
+
+        /** @var AlarmSystem $systemToEdit */
+        $systemToEdit = $alarmSystemsRepo->find($id);
+
+
+
+        $systemEditForm = $this->createForm(AddAlarmSystemForm::class, $systemToEdit);
+        $systemEditForm->handleRequest($request);
+        if ($systemEditForm->isSubmitted() && $systemEditForm->isValid()) {
+            $systemToEdit = $systemEditForm->getData();
+
+            $em->persist($systemToEdit);
+            $em->flush();
+
+        }
+
+
+        return $this->render('equipment/editAlarmSystem.html.twig',[
+            'editAlarmSystemForm' => $systemEditForm->createView(),
+        ]);
+    }
+
+
+    /**
+     * @Route("/alarm/delete/{id}", name="deleteAlarm")
+     */
+    public function alarmDelete(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_SECURITY_DEVICES_DELETE');
+
+        $alarmSystemsRepo = $this->getDoctrine()->getRepository(AlarmSystem::class);
+        $alarmTodelete = $alarmSystemsRepo->find($id);
+
+        if($alarmTodelete) {
+            $em->remove($alarmTodelete);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('alarmList');
     }
 }

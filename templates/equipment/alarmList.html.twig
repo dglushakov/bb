@@ -1,0 +1,71 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">ОПС</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {% form_theme addAlarmSystemForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(addAlarmSystemForm) }}
+            {{ form_errors(addAlarmSystemForm) }}
+
+            {{ form_end(addAlarmSystemForm) }}
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Facility</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for alarmSystem in alarmSystemsList %}
+                    <tr>
+                        <td>#</td>
+                        <td>{{ alarmSystem.facility.address }}</td>
+                        <td>
+                            <a href="/alarm/edit/{{ alarmSystem.id }}" class="btn btn-sm"><img
+                                        alt="edit"
+                                        width="20px"
+                                        src="{{ asset('img/edit.png') }}">
+                            </a>
+                            <a href="#" data-href="/alarm/delete/{{ alarmSystem.id }}" data-toggle="modal"
+                               data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                {% include 'include/deleteConfirmationModal.html.twig' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+    </script>
+
+{% endblock %}
