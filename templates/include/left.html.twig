@@ -3,10 +3,14 @@
         <ul class="list-unstyled list-group">
             {% if is_granted('ROLE_USER') %}
 
+
                 <li class="list-group-item  list-group-item-action">
                     <a href="{{ path('home') }}" class="stretched-link text-dark">
                         Home
                     </a>
+                </li>
+                <li class="list-group-item  list-group-item-action bg-info text-white">
+                    TRASSIR
                 </li>
                 <li class="list-group-item list-group-item-action">
                     <a href="{{ path('nvrList') }}" class="stretched-link text-dark">
@@ -18,29 +22,53 @@
                         Trassir Users
                     </a>
                 </li>
-
+                {% if is_granted('ROLE_NVR_HEALTH_LIST') %}
+                    <li class="list-group-item list-group-item-action">
+                        <a href="{{ path('trassirHealthList') }}" class="stretched-link text-dark">
+                            Trassir Health
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
-
+                <li class="list-group-item  list-group-item-action bg-info text-white">
+                    ADMIN
+                </li>
                 <li class="list-group-item list-group-item-action">
                     <a href="{{ path('userlist') }}" class="stretched-link text-dark">
                         Users
                     </a>
                 </li>
             {% endif %}
-            {% if is_granted('ROLE_NVR_LIST') %}
-                <li class="list-group-item list-group-item-action">
-                    <a href="{{ path('trassirHealthList') }}" class="stretched-link text-dark">
-                        Trassir Health
-                    </a>
+
+            {% if is_granted('ROLE_FACILITY') %}
+                <li class="list-group-item  list-group-item-action bg-info text-white">
+                    Facilities
                 </li>
-            {% endif %}
-            {% if is_granted('ROLE_NVR_HEALTH_LIST') %}
                 <li class="list-group-item list-group-item-action">
                     <a href="{{ path('facilitylist') }}" class="stretched-link text-dark">
                         Facilities
                     </a>
                 </li>
+            {% endif %}
+
+            {% if is_granted('ROLE_EQUIPMENT') %}
+                <li class="list-group-item  list-group-item-action bg-info text-white">
+                    Equipment
+                </li>
+                <li class="list-group-item list-group-item-action">
+                    <a href="{{ path('equipmentList') }}" class="stretched-link text-dark">
+                        Equipment List
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_DEVICE') %}
+                    <li class="list-group-item list-group-item-action">
+                        <a href="{{ path('deviceList') }}" class="stretched-link text-dark">
+                            Devices
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>

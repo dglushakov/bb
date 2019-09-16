@@ -1,0 +1,153 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Оборудование</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {% form_theme addEquipmentForm 'bootstrap_4_layout.html.twig' %}
+            {{ form_start(addEquipmentForm) }}
+            {{ form_errors(addEquipmentForm) }}
+            <div class="row">
+                <div class="col-1">
+                    {{ form_row(addEquipmentForm.Type) }}
+                </div>
+                <div class="col-2">
+                    {{ form_row(addEquipmentForm.Make) }}
+                </div>
+                <div class="col-4">
+                    {{ form_row(addEquipmentForm.Model) }}
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Add new</button>
+                </div>
+            </div>
+            {{ form_end(addEquipmentForm) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+            <table class="table table-striped" id="equipmentTable">
+                <thead>
+                <tr class="tr">
+
+                    <td colspan="2">
+                        <form id="myform">
+                            Select a type from the list:
+                            <select id="dropdown_change_equipmentType">
+                                <option value="all">all</option>
+                                {% for equipmentType in equipmentTypes %}
+                                    <option value="{{ equipmentType }}">{{ equipmentType }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Тип</th>
+                    <th>Марка</th>
+                    <th>Модель</th>
+                    <th>Редактирование</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for equipment in equipmentList %}
+                    <tr>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+                        <td>
+                            {{ equipment.type }}
+                        </td>
+                        <td>
+                            {{ equipment.make }}
+                        </td>
+                        <td>
+                            {{ equipment.model }}
+                        </td>
+                        <td>
+                            <a href="/equipment/edit/{{ equipment.id }}" class="btn btn-sm"><img
+                                        alt="edit"
+                                        width="20px"
+                                        src="{{ asset('img/edit.png') }}">
+                            </a>
+                            <a href="#" data-href="/equipment/delete/{{ equipment.id }}" data-toggle="modal"
+                               data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% include 'include/deleteConfirmationModal.html.twig' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $("#dropdown_change_equipmentType").change(function () {
+
+                $("#equipmentTable tbody tr").remove();
+                var $type = $('#dropdown_change_equipmentType option:selected').val();
+                var url = '{{ path('getEquipmentList', {'type': 'type_id'}) }}';
+                url = url.replace("type_id", $type);
+                $.ajax({
+                    method: 'POST',
+                    url: url
+                }).done(function (data) {
+                    console.log(data);
+                    var $i = 0;
+                    data.forEach(function (equipment) {
+                        $i++;
+                        $("#equipmentTable tbody").append(
+                            '<tr>' +
+                            '<td>' + $i + '</td><td>' + equipment['type'] + '</td>' +
+                            '<td>' + equipment['make'] +
+                            '</td><td>' + equipment['model'] + '</td>' +
+                            '<td><a href="/equipment/edit/' +
+                                        equipment['id'] +
+                                        '" class="btn btn-sm">' +
+                                        '<img alt="edit"' +
+                                        'width="20px"' +
+                                        'src="{{ asset('img/edit.png') }}">' +
+                           '</a>'+
+                            '<a href="#" data-href="/equipment/delete/'+ equipment['id'] + '" '+
+                            'data-toggle="modal"' +
+                            'data-target="#confirm-delete"'+
+                            'class="btn btn-sm">' +
+                            '<img alt="delete"' +
+                            'width="20px"' +
+                            'src="{{ asset('img/cancel.png') }}">' +
+                            '</a>'+
+                            '</td>' +
+                            '</tr>'
+                        );
+                    });
+                });
+            });
+        });
+
+
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+    </script>
+
+{% endblock %}
