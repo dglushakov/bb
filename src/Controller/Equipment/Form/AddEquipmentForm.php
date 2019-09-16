@@ -30,8 +30,6 @@ class AddEquipmentForm extends AbstractType
             ->add('Model', TextType::class, [
                 'label' => 'Модель'
             ]);
-
-
     }
 
 }

@@ -1,0 +1,29 @@
+{% extends 'home.html.twig' %}
+
+
+{% block main %}
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Edit Safe</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light">
+            {% form_theme editEquipmentForm 'bootstrap_4_horizontal_layout.html.twig' %}
+            {{ form_start(editEquipmentForm) }}
+            {{ form_widget(editEquipmentForm) }}
+
+            <a href="{{ path('safesList') }}" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+            {{ form_end(editEquipmentForm) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+
+{% endblock %}

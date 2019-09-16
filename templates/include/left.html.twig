@@ -62,10 +62,10 @@
                     </a>
                 </li>
 
-                {% if is_granted('ROLE_DEVICE') %}
+                {% if is_granted('ROLE_SECURITY_DEVICES') %}
                     <li class="list-group-item list-group-item-action">
-                        <a href="{{ path('deviceList') }}" class="stretched-link text-dark">
-                            Devices
+                      <a href="{{ path('safesList') }}" class="stretched-link text-dark">
+                            Safes
                         </a>
                     </li>
                 {% endif %}

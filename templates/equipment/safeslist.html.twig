@@ -1,0 +1,105 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Сейфы</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {% form_theme addSafeForm 'bootstrap_4_layout.html.twig' %}
+            {{ form_start(addSafeForm) }}
+            {{ form_errors(addSafeForm) }}
+            <div class="row">
+                <div class="col-1">
+                    {{ form_row(addSafeForm.Equipment) }}
+                </div>
+                <div class="col-2">
+                    {{ form_row(addSafeForm.Serial) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form_row(addSafeForm.Facility) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form_row(addSafeForm.Status) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form_row(addSafeForm.Comment) }}
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Add new</button>
+                </div>
+            </div>
+            {{ form_end(addSafeForm) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Model</th>
+                    <th>Serial</th>
+                    <th>Facility</th>
+                    <th>Status</th>
+                    <th>Comment</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for safe in safesList %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ safe.equipment.model }}</td>
+                        <td>{{ safe.serial }}</td>
+                        <td>{{ safe.facility.address }}</td>
+                        <td>{{ safe.status }}</td>
+                        <td>{{ safe.comment }}</td>
+                        <td>
+                            <a href="/safes/edit/{{ safe.id }}" class="btn btn-sm"><img
+                                        alt="edit"
+                                        width="20px"
+                                        src="{{ asset('img/edit.png') }}">
+                            </a>
+                            <a href="#" data-href="/safes/delete/{{ safe.id }}" data-toggle="modal"
+                               data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                {% include 'include/deleteConfirmationModal.html.twig' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+{{ parent() }}
+
+<script>
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+
+</script>
+
+{% endblock %}

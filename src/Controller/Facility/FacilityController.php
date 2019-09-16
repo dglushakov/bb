@@ -33,6 +33,8 @@ class FacilityController extends AbstractController
             ]);
 
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+
+        $nvrCount=[];
         foreach ($facilityList as $facility) {
             $nvrCount[$facility->getId()] = count($trassirNvrRepo->findBy(['facility' => $facility]));
         }
