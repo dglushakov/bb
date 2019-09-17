@@ -7,7 +7,9 @@ namespace App\Controller\Facility;
 use App\Controller\Facility\Forms\AddFacilityForm;
 use App\Controller\Facility\Forms\EditFacilityForm;
 use App\Controller\Facility\Forms\testForm;
+use App\Entity\AlarmSystem;
 use App\Entity\Facility;
+use App\Entity\Safe;
 use App\Entity\TrassirNvr;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,10 +35,14 @@ class FacilityController extends AbstractController
             ]);
 
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+        $safesRepo = $this->getDoctrine()->getRepository(Safe::class);
+        $alarmSystems = $this->getDoctrine()->getRepository(AlarmSystem::class);
 
         $nvrCount=[];
         foreach ($facilityList as $facility) {
             $nvrCount[$facility->getId()] = count($trassirNvrRepo->findBy(['facility' => $facility]));
+            $nvrCount[$facility->getId()] += count($safesRepo->findBy(['facility' => $facility]));
+            $nvrCount[$facility->getId()] += count($alarmSystems->findBy(['facility' => $facility]));
         }
 
         $addFacilityForm = $this->createForm(AddFacilityForm::class, new Facility());
