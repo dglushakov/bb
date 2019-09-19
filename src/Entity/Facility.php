@@ -73,6 +73,8 @@ class Facility
      */
     public function getAddress()
     {
+        $address ='';
+
         switch ($this->country) {
             case 'Russia':
                 $country = 'Россия';
@@ -82,14 +84,33 @@ class Facility
                 break;
         }
 
+        $address .= $country;
+        $address .= ', '.$this->city;
 
         if (isset($this->streetType)) {
             $strType = self::getStreetTypes()["$this->streetType"];
+            $address .= ', ' . $strType . ' ';
         } else {
             $strType = '';
         }
+        $address .= $this->street .', ';
+        $address .= 'д. '. $this->house;
 
-        return $country .', '. $this->city . ', ' . $strType . ' ' . $this->street . ', ' . $this->house;
+        if (isset($this->buildingType)) {
+            $buildingType = self::getBuildingTypes()["$this->buildingType"];
+            $address .= ', ' . $buildingType . ' ';
+        } else {
+            $buildingType = '';
+        }
+        $address .= $this->building;
+
+        if($this->room) {
+            $address .= ', помещение ';
+            $address .= $this->room;
+        }
+
+
+        return $address;
     }
 
     /**
