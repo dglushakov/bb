@@ -28,7 +28,7 @@ class AddSafeForm extends AbstractType
                         ->addOrderBy('u.model', 'ASC')
                         ->setParameter('type', 'safe');
                 },
-                'choice_label' => 'model'
+                'choice_label' => 'model',
             ])
             ->add('Serial', TextType::class, [
                 'label' => 'Serial',

@@ -1,0 +1,127 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Оборудование</h1>
+        </div>
+    </div>
+
+    <div class="row bg-light">
+        <div class="col-8">
+            {% form_theme addDeviceForm 'bootstrap_4_layout.html.twig' %}
+            {{ form_start(addDeviceForm) }}
+            {{ form_errors(addDeviceForm) }}
+
+            <div class="row">
+                <div class="col">
+                    {{ form_row(addDeviceForm.Equipment) }}
+                </div>
+                <div class="col">
+                    {{ form_row(addDeviceForm.Serial) }}
+                </div>
+            </div>
+            {{ form_end(addDeviceForm) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h2>Нераспределенное оборудование</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Model</th>
+                    <th>Serial</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for device in devicesList %}
+                    <tr>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+                        <td>
+                            {{ device.equipment.model }}
+                        </td>
+                        <td>
+                            {{ device.serial }}
+                        </td>
+
+                        <td>
+                            <a href="/securityDevice/edit/{{ device.id }}" class="btn btn-sm"><img
+                                        alt="edit"
+                                        width="20px"
+                                        src="{{ asset('img/edit.png') }}">
+                            </a>
+                            <a href="#" data-href="/securityDevice/delete/{{ device.id }}" data-toggle="modal"
+                               data-target="#confirm-delete" class="btn btn-sm delete-type">
+                                <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% include 'include/deleteConfirmationModal.html.twig' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h2>Оборудование в подразделениях</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Facility</th>
+                    <th>Number of Devices</th>
+                    <th>Edit</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for id, facility in allocatedDevices %}
+                    <tr>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+                        <td>
+                            {{ facility.address }}
+                        </td>
+                        <td>
+                            {{ facility.count }}
+                        </td>
+                        <td>
+                            <a href="/securityDevice/editFacility/{{ id }}" class="btn btn-sm"><img
+                                        alt="edit"
+                                        width="20px"
+                                        src="{{ asset('img/edit.png') }}">
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+    {{ parent() }}
+
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+    </script>
+
+{% endblock %}

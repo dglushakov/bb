@@ -105,5 +105,4 @@ class EquipmentController extends AbstractController
         }
       return $this->json($equipmentList);
     }
-
 }

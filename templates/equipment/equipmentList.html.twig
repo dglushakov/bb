@@ -36,7 +36,6 @@
     </div>
     <div class="row">
         <div class="col">
-
             <table class="table table-striped" id="equipmentTable">
                 <thead>
                 <tr class="tr">
@@ -94,7 +93,6 @@
             </table>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascriptsAfterBody %}
@@ -121,20 +119,20 @@
                             '<td>' + equipment['make'] +
                             '</td><td>' + equipment['model'] + '</td>' +
                             '<td><a href="/equipment/edit/' +
-                                        equipment['id'] +
-                                        '" class="btn btn-sm">' +
-                                        '<img alt="edit"' +
-                                        'width="20px"' +
-                                        'src="{{ asset('img/edit.png') }}">' +
-                           '</a>'+
-                            '<a href="#" data-href="/equipment/delete/'+ equipment['id'] + '" '+
+                            equipment['id'] +
+                            '" class="btn btn-sm">' +
+                            '<img alt="edit"' +
+                            'width="20px"' +
+                            'src="{{ asset('img/edit.png') }}">' +
+                            '</a>' +
+                            '<a href="#" data-href="/equipment/delete/' + equipment['id'] + '" ' +
                             'data-toggle="modal"' +
-                            'data-target="#confirm-delete"'+
+                            'data-target="#confirm-delete"' +
                             'class="btn btn-sm">' +
                             '<img alt="delete"' +
                             'width="20px"' +
                             'src="{{ asset('img/cancel.png') }}">' +
-                            '</a>'+
+                            '</a>' +
                             '</td>' +
                             '</tr>'
                         );
