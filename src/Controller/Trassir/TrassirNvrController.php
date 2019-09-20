@@ -24,7 +24,7 @@ class TrassirNvrController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_NVR_LIST');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
+        $trassirNvrList = $trassirNvrRepo->findBy([], ['name' => 'ASC', 'Ip' => 'ASC']);
 
         $addNvrForm = $this->createForm(AddNvrForm::class, new TrassirNvr());
 
@@ -68,7 +68,7 @@ class TrassirNvrController extends AbstractController
 
             /** @var TrassirNvr $formData */
             $formData = $request->request->get('edit_trassir_nvr_form');
-            if($formData['Facility']=='') {
+            if ($formData['Facility'] == '') {
                 $trassirNvrToEdit->setFacility(null);
             }
 
@@ -81,7 +81,7 @@ class TrassirNvrController extends AbstractController
 
         return $this->render('trassir/editTrassirNvr.html.twig', [
             'editTrassirNvrForm' => $EditTrassirNvrForm->createView(),
-            'server'=>$trassirNvrToEdit,
+            'server' => $trassirNvrToEdit,
         ]);
     }
 
@@ -96,10 +96,10 @@ class TrassirNvrController extends AbstractController
         $trassirNvrToDelete = $trassirNvrRepo->find($id);
 
         $trassirNvrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $trassirNvrDataListToDelete = $trassirNvrDataRepo->findBy(['trassirNvrId'=>$trassirNvrToDelete]);
+        $trassirNvrDataListToDelete = $trassirNvrDataRepo->findBy(['trassirNvrId' => $trassirNvrToDelete]);
 
         if ($trassirNvrToDelete) {
-            foreach ($trassirNvrDataListToDelete as $dataToTdelete){
+            foreach ($trassirNvrDataListToDelete as $dataToTdelete) {
                 $em->remove($dataToTdelete);
             }
 
@@ -118,7 +118,7 @@ class TrassirNvrController extends AbstractController
 
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
+        $trassirNvrList = $trassirNvrRepo->findBy([], ['name' => 'ASC', 'Ip' => 'ASC']);
 
         $trassirNVrDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
@@ -127,21 +127,26 @@ class TrassirNvrController extends AbstractController
          */
         $trassirNvrDataList = [];
         foreach ($trassirNvrList as $trassirNvr) {
-            $trassirNvrDataList[] = $trassirNVrDataRepo->findOneBy([
+            $newData = $trassirNVrDataRepo->findOneBy([
                 'trassirNvrId' => $trassirNvr,
                 'success' => true,
 
             ], [
                 'dateTime' => 'DESC'
             ]);
+            $trassirNvrDataList[] = $newData;
+            if ($newData) {
+                $trassirNvr->users = $newData->getObjects()['UserNames'];
+            }
+
         }
 
 
-        $trassirUsersData=[];
-        foreach ($trassirNvrDataList as $trassirNvrData){
-            if($trassirNvrData !== NULL){
-                foreach ($trassirNvrData->getObjects()['UserNames'] as $username){
-                    $trassirUsersData[$username]['ip'][$trassirNvrData->getTrassirNvrId()->getName()]=$trassirNvrData->getTrassirNvrId()->getIp();
+        $trassirUsersData = [];
+        foreach ($trassirNvrDataList as $trassirNvrData) {
+            if ($trassirNvrData !== NULL) {
+                foreach ($trassirNvrData->getObjects()['UserNames'] as $username) {
+                    $trassirUsersData[$username]['ip'][$trassirNvrData->getTrassirNvrId()->getName()] = $trassirNvrData->getTrassirNvrId()->getIp();
                 }
             }
         }
@@ -149,8 +154,8 @@ class TrassirNvrController extends AbstractController
 
         return $this->render('trassir/trassirusersList.html.twig', [
             //'trassirNvrDataList' => $trassirNvrDataList,
-            'nvrList'=>$trassirNvrList,
-            'trassirUsers'=>$trassirUsersData,
+            'nvrList' => $trassirNvrList,
+            'trassirUsers' => $trassirUsersData,
 
         ]);
     }

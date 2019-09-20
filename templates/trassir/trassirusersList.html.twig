@@ -12,7 +12,12 @@
             </th>
             {% for key, nvr in nvrList %}
                 {% if nvr.Id is defined %}
-                    <th class="col text-nowrap tex-vertical tr_fixed">
+                    <th class="col text-nowrap tex-vertical tr_fixed" title="
+                        {% if nvr.users is defined %}
+                            {% for key, value in nvr.users|sort %}{{ loop.index }}-{{ value }}{{ "\n" }} {% endfor %}
+                             TOTAL: {{ nvr.users|length }}
+                        {% endif %}
+                        ">
                         <div><span>
                             {% if nvr.name is defined and nvr.name!="" %}
                                 {{ nvr.name }}
@@ -32,16 +37,15 @@
                     {{ loop.index }}
                 </td>
                 <td class="col text-nowrap  border-right border-gray" title="
-                {% for key, value in user.ip %}{{ loop.index}} {{ key }} {{ value }}{{ "\n" }}{% endfor %}
+                {% for key, value in user.ip %}{{ loop.index }} {{ key }} {{ value }}{{ "\n" }}{% endfor %}
                 TOTAL: {{ user.ip|length }}">
                     {{ userName }}
                 </td>
                 {% for key, nvr in nvrList %}
 
                     {% if nvr.ip in user.ip %}
-                        <td class="text-center border-right border-gray" title="{{ nvr.ip }} {{ nvr.name }}">
+                        <td class="text-center border-right border-gray bg-warning" title="{{ nvr.ip }} {{ nvr.name }}">
                             +
-
                         </td>
                     {% else %}
                         <td class="border-right border-gray">
