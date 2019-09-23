@@ -67,7 +67,7 @@
                         <td>{{ loop.index }}</td>
                         <td>{{ safe.equipment.model }}</td>
                         <td>{{ safe.serial }}</td>
-                        <td>{{ safe.facility.address }}</td>
+                        <td>{{ safe.facility.address?? "" }}</td>
                         <td>{{ safe.status }}</td>
                         <td>{{ safe.comment }}</td>
                         <td>
