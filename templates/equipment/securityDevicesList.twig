@@ -35,6 +35,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
+                    <th>Type</th>
                     <th>Model</th>
                     <th>Serial</th>
                     <th>Actions</th>
@@ -45,6 +46,9 @@
                     <tr>
                         <td>
                             {{ loop.index }}
+                        </td>
+                        <td>
+                            {{ device.equipment.type }}
                         </td>
                         <td>
                             {{ device.equipment.model }}

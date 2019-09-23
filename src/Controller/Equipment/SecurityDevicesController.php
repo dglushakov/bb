@@ -194,11 +194,18 @@ class SecurityDevicesController extends AbstractController
             return $this->redirectToRoute('securityDevicesList');
         }
 
-        $devicesRepo = $this->getDoctrine()->getRepository(SecurityDevice::class);
-        $notAllocatedDevices = $devicesRepo->findBy(['facility' => null], [
-            'equipment' => 'DESC',
-            'serial' => 'ASC',
-        ]);
+        $devicesRepo = $this->getDoctrine()->getRepository(SecurityDevice::class); //TODO решить что делать с сейфами?
+        $notAllocatedDevices = $devicesRepo->findBy(
+            [
+                'facility' => null,
+
+            ],
+            [
+                'equipment' => 'DESC',
+                'serial' => 'ASC',
+            ]);
+        $notAllocatedDevices = $devicesRepo->getDevicesExceptSafes();
+
 
         $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
         $facilities = $facilityRepo->findAll();
@@ -269,7 +276,7 @@ class SecurityDevicesController extends AbstractController
     /**
      * @Route("/securityDevice/editFacility/{id}", name="securityDeviceFacilityEdit")
      */
-    public function securityDeviceFacilityEdit(Request $request, EntityManagerInterface $em, $id=null)
+    public function securityDeviceFacilityEdit(Request $request, EntityManagerInterface $em, $id = null)
     {
         $this->denyAccessUnlessGranted('ROLE_SECURITY_DEVICES_EDIT');
 
@@ -281,9 +288,9 @@ class SecurityDevicesController extends AbstractController
             'facility' => $facility,
         ],
             [
-                'serial'=>'ASC',
+                'serial' => 'ASC',
             ]
-            );
+        );
 
         $deviceToAdd = new SecurityDevice();
         $deviceToAdd->setFacility($facility);
@@ -294,7 +301,7 @@ class SecurityDevicesController extends AbstractController
             $newDevice = $securityDeviceForm->getData();
             $em->persist($newDevice);
             $em->flush();
-            return $this->redirectToRoute('securityDeviceFacilityEdit', ['id'=>$facility->getId()]);
+            return $this->redirectToRoute('securityDeviceFacilityEdit', ['id' => $facility->getId()]);
         }
 
         return $this->render('equipment/securityDeviceFacilityEdit.html.twig', [
@@ -320,7 +327,7 @@ class SecurityDevicesController extends AbstractController
         $em->persist($devicesToEdit);
         $em->flush();
 
-        return $this->redirectToRoute('securityDeviceFacilityEdit', ['id'=>$facilityIdToRedirect]);
+        return $this->redirectToRoute('securityDeviceFacilityEdit', ['id' => $facilityIdToRedirect]);
     }
 
 }

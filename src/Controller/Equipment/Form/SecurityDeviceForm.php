@@ -34,7 +34,7 @@ class SecurityDeviceForm extends AbstractType
                             ->orderBy('u.type', 'ASC')
                             ->addOrderBy('u.make', 'ASC')
                             ->addOrderBy('u.model', 'ASC')
-                            ->setParameter('types', ['Safes']);
+                            ->setParameter('types', ['Safe']);
                     },
             ])
             ->add('Serial', TextType::class, [

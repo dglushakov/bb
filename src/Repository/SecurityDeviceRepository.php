@@ -19,6 +19,19 @@ class SecurityDeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, SecurityDevice::class);
     }
 
+    public function getDevicesExceptSafes()
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.equipment IN (SELECT u2.id FROM App\Entity\Equipment u2 WHERE u2.type NOT IN (:notAllowedTypes))')
+            ->andWhere ('s.facility IS NULL')
+            ->setParameter('notAllowedTypes', ['Safe'])
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return SecurityDevice[] Returns an array of SecurityDevice objects
     //  */
