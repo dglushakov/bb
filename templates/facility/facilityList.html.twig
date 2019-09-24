@@ -83,8 +83,16 @@
                 <tbody class="pt-5">
                 {% for facility in facilities %}
                     <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ facility.name }}</td>
+                        <td>
+                            <a href="{{ path('facilityPassport', {id: facility.id}) }}">
+                                {{ loop.index }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('facilityPassport', {id: facility.id}) }}">
+                                {{ facility.name }}
+                            </a>
+                        </td>
                         <td>{{ facility.address }}</td>
                         <td>
                             <a href="/facility/edit/{{ facility.id }}" class="btn btn-sm"><img

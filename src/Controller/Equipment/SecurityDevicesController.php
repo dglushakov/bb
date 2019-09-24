@@ -194,7 +194,7 @@ class SecurityDevicesController extends AbstractController
             return $this->redirectToRoute('securityDevicesList');
         }
 
-        $devicesRepo = $this->getDoctrine()->getRepository(SecurityDevice::class); //TODO решить что делать с сейфами?
+        $devicesRepo = $this->getDoctrine()->getRepository(SecurityDevice::class);
         $notAllocatedDevices = $devicesRepo->getDevicesExceptSafes();
 
         $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);

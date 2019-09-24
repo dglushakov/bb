@@ -10,7 +10,9 @@ use App\Controller\Facility\Forms\testForm;
 use App\Entity\AlarmSystem;
 use App\Entity\Facility;
 use App\Entity\Safe;
+use App\Entity\SecurityDevice;
 use App\Entity\TrassirNvr;
+use App\Entity\TrassirNvrData;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -151,6 +153,36 @@ class FacilityController extends AbstractController
             $cities = Facility::getByCities();
         }
         return new JsonResponse($cities);
+    }
+
+    /**
+     * @Route("/facilityPassport/{id}", name = "facilityPassport")
+     */
+    public function facilityPassport($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_FACILITY');
+        $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
+        $facilityToShow = $facilityRepo->find($id);
+
+        $securityDeviceRepo = $this->getDoctrine()->getRepository(SecurityDevice::class);
+        $safeRepo = $this->getDoctrine()->getRepository(Safe::class);
+        $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+
+        $trassirNvrList = $trassirNvrRepo->findBy(['facility'=>$facilityToShow]);
+
+        $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
+        $trassirHealth=[];
+        foreach ($trassirNvrList as $trassirNvr){
+            $trassirHealth[$trassirNvr->getId()] = $trassirDataRepo->findOneBy(['trassirNvrId'=>$trassirNvr->getId()],['dateTime'=>'DESC']);
+        }
+
+        return $this->render('facility/facilityPassport.html.twig', [
+           'facility' => $facilityToShow,
+            'securityDevices' => $securityDeviceRepo->findBy(['facility'=>$facilityToShow]),
+            'safes' => $safeRepo->findBy(['facility'=>$facilityToShow]),
+            'trassirNvr' => $trassirNvrList,
+            'trassirNvrHealth' => $trassirHealth,
+        ]);
     }
 
 

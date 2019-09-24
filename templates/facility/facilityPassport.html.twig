@@ -1,0 +1,104 @@
+{% extends 'home.html.twig' %}
+
+{% block main %}
+    <div class="row text-center">
+        <div class="col">
+            <h1>{{ facility.name }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <b>Адрес: {{ facility.address }}</b>
+        </div>
+    </div>
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>Параметр</th>
+            <th>Состояние</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if safes|length >0 %}
+            {% for safe in safes %}
+                <tr>
+                    <td>
+                        Сейф: {{ safe.equipment.make }} {{ safe.equipment.model }} Серийный
+                        номер: {{ safe.serial }}
+                    </td>
+                    <td>
+                        {% if safe.status !="OK" %}
+                            <img src="{{ asset('img/cancel.png') }}"> {{ safe.comment }}
+                        {% else %}
+                            <img src="{{ asset('img/done.png') }}"
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>Сейф отсутствует</td>
+                <td><img src="{{ asset('img/cancel.png') }}"></td>
+            </tr>
+        {% endif %}
+        {% if trassirNvr|length >0 %}
+            {% for nvr in trassirNvr %}
+                <tr>
+                    <td>
+                        Trassir: {{ nvr.ip }} {{ nvr.name?? "" }}
+                    </td>
+                    <td>
+                        {% if trassirNvrHealth[nvr.id].health is defined
+                            and (trassirNvrHealth[nvr.id].health['network'] is defined
+                            and trassirNvrHealth[nvr.id].health['network']==1) %}
+                            {% set online = true %}
+                        {% else %}
+                            {% set online = false %}
+                        {% endif %}
+                    <img src="{{ online?asset('img/done.png'):asset('img/cancel.png') }}"
+                             alt="Online status image">
+                    </td>
+                </tr>
+
+                {% if trassirNvrHealth[nvr.id].objects.UserNames is defined and trassirNvrHealth[nvr.id].objects.UserNames|length>0 %}
+                    <tr><td colspan="3">Users </td></tr>
+                    {% for user in  trassirNvrHealth[nvr.id].objects.UserNames %}
+                        <tr><td colspan="3" class="text-center"> {{ user }} </td></tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>Trassir отсутствует</td>
+                <td><img src="{{ asset('img/cancel.png') }}"></td>
+            </tr>
+        {% endif %}
+
+        </tbody>
+    </table>
+
+
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr><th class="text-center thead-light" colspan="5">Размещенное обрудование</th></tr>
+        <tr>
+            <th>#</th>
+            <th>Тип</th>
+            <th>Марка</th>
+            <th>Модель</th>
+            <th>Серийный номер</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for device in securityDevices %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ device.equipment.type }}</td>
+                <td>{{ device.equipment.make }}</td>
+                <td>{{ device.equipment.model }}</td>
+                <td>{{ device.serial }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
