@@ -12,11 +12,32 @@
 
             <div class="col">
                 {% block main %}
-                    <h1>HOME</h1>
                     {% if data is defined %}
-                    {{ data }}
-                    {% endif %}
-                    {% if users is defined %}
+                        <table class="table table-striped mt-5">
+                            <tbody>
+                            <tr>
+                                <td>Всего подразделений: </td>
+                                <td>{{ data.facilityCount }}</td>
+                            </tr>
+                            <tr>
+                                <td>Оборудованы сейфом: </td>
+                                <td>{{ data.equippedWithSafes }}</td>
+                            </tr>
+                            <tr>
+                                <td>Оборудованы Trassir: </td>
+                                <td>{{ data.equippedWithTrassir }}</td>
+                            </tr>
+                            <tr><td></td><td></td></tr>
+                            <tr>
+                                <td>Всего серверов Трассир: </td>
+                                <td>{{ data.trassirNvrCount }}</td>
+                            </tr>
+                            <tr>
+                                <td>Онлайн: </td>
+                                <td>{{ data.trassirNvrOnline }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     {% endif %}
                 {% endblock %}
