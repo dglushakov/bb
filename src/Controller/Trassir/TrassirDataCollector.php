@@ -6,12 +6,14 @@ namespace App\Controller\Trassir;
 
 use App\Entity\TrassirNvr;
 use App\Entity\TrassirNvrData;
+use App\Message\trassirHealthDataCollect;
 use Dglushakov\Trassir\TrassirServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class TrassirDataCollector extends AbstractController
 {
@@ -78,6 +80,24 @@ class TrassirDataCollector extends AbstractController
 
         foreach ($trassirNvrList as $nvrToCollectData) {
             $this->trassirDataCollect($nvrToCollectData->getId(), $em);
+        }
+        return new JsonResponse([
+            'result'=>true,
+        ]);
+    }
+
+    /**
+     * @Route("/trassirDataCollectGroupQueue", name="trassirDataCollectGroupQueue")
+     *
+     */
+    public function trassirDataCollectGroupQueue(EntityManagerInterface $em, MessageBusInterface $messageBus) {
+        $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+        $trassirNvrList = $trassirNvrRepo->findAll();
+
+        foreach ($trassirNvrList as $nvrToCollectData) {
+            $message = new trassirHealthDataCollect($nvrToCollectData->getId());
+            //$this->trassirDataCollect($nvrToCollectData->getId(), $em);
+            $messageBus->dispatch($message);
         }
         return new JsonResponse([
             'result'=>true,

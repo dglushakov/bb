@@ -8,8 +8,6 @@ use App\Entity\Facility;
 use App\Entity\Safe;
 use App\Entity\TrassirNvr;
 use App\Entity\TrassirNvrData;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
