@@ -34,6 +34,9 @@
                         <div class="col">
                             <div id="trassir_chart"></div>
                         </div>
+                        <div class="col">
+                            <div id="trassir_nvr_chart"></div>
+                        </div>
                     </div>
 
 
@@ -99,18 +102,42 @@
                             data: {
                                 columns: [
                                     ['Equipped', {{ data.equippedWithTrassir }}],
-
                                     ['Not equipped', {{ notEquippedWithTrassir }}]
                                 ],
                                 type: 'donut',
                                 colors: {
                                     'Equipped': '#2CA02C',
-
                                     'Not equipped': '#D62728',
                                 },
                             },
                             donut: {
-                                title: "Trassir",
+                                title: "Trassir installation",
+                                label: {
+                                    format: function (value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
+
+                    <script>
+                        var chart = c3.generate({
+                            bindto: '#trassir_nvr_chart',
+                            data: {
+                                columns: [
+                                    ['Online', {{ data.trassirNvrOnline }}],
+                                    ['Offline', {{ data.trassirNvrCount - data.trassirNvrOnline }}]
+                                ],
+                                type: 'donut',
+                                colors: {
+                                    'Online': '#2CA02C',
+                                    'Offline': '#D62728',
+                                },
+                            },
+                            donut: {
+                                title: "Trassir NVR status",
                                 label: {
                                     format: function (value) {
                                         return value;
