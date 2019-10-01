@@ -55,12 +55,14 @@ class MainController extends AbstractController
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
         $trassirNvrOnline=0;
         foreach ($trassirNvrList as $trassirNvr){
+
             $health = $trassirDataRepo->findOneBy(['trassirNvrId'=>$trassirNvr->getId()],['dateTime'=>'DESC']);
-            if ($health and $health->getHealth()['network']==1 ) {
+            if ($health and !isset($health->getHealth()['status']) ) {
                 $trassirNvrOnline++;
             }
         }
         $summaryData['trassirNvrOnline']  = $trassirNvrOnline;
+
 
         return $this->render('home.html.twig', [
             'data'=>$summaryData,
