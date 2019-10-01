@@ -54,18 +54,17 @@ class Equipment
     public static function getEquipmentMakes()
     {
         $makes = [
-            'Aiko' => 'Aiko',
             'Cobalt' => 'Cobalt',
+            'Safetronics '=>'Safetronics ',
+            'Valberg' => 'Valberg',
+            'Контур' => 'Контур',
+            'Меткон' => 'Меткон',
+            'Western Digital' => 'Western Digital',
+            'Zyxel' => 'Zyxel',
             'D-Link' => 'D-Link',
             'DSSL' => 'DSSL',
             'HikVision' => 'HikVision',
             'Ippon' => 'Ippon',
-            'Valberg' => 'Valberg',
-            'Western Digital' => 'Western Digital',
-            'Zyxel' => 'Zyxel',
-            'Гранит' => 'Гранит',
-            'Контур' => 'Контур',
-            'Меткон' => 'Меткон',
         ];
 
         return $makes;
