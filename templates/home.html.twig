@@ -1,5 +1,15 @@
 {% extends 'base.html.twig' %}
 
+        {% block stylesheets %}
+            {{ parent() }}
+            <link href="{{ asset('c3j_charts_library/c3.css') }}" rel="stylesheet">
+        {% endblock %}
+        {% block javascriptsBeforeBody %}
+            {{ parent() }}
+            <script src="{{ asset('c3j_charts_library/d3.min.js') }}" charset="utf-8"></script>
+            <script src="{{ asset('c3j_charts_library/c3.min.js') }}"></script>
+        {% endblock %}
+
 {% block body %}
     <div class="container-fluid">
         {% include 'include/top.html.twig' %}
@@ -9,61 +19,114 @@
             <div class="col-2">
                 {% include 'include/left.html.twig' %}
             </div>
-
             <div class="col">
                 {% block main %}
                     {% if data is defined %}
-                        <table class="table table-striped mt-5">
-                            <tbody>
-                            <tr>
-                                <td>Всего подразделений: </td>
-                                <td>{{ data.facilityCount }}</td>
-                            </tr>
-                            <tr>
-                                <td>Оборудованы сейфом: </td>
-                                <td>{{ data.equippedWithSafes }}</td>
-                            </tr>
-                            <tr>
-                                <td>Оборудованы Trassir: </td>
-                                <td>{{ data.equippedWithTrassir }}</td>
-                            </tr>
-                            <tr><td></td><td></td></tr>
-                            <tr>
-                                <td>Всего серверов Трассир: </td>
-                                <td>{{ data.trassirNvrCount }}</td>
-                            </tr>
-                            <tr>
-                                <td>Онлайн: </td>
-                                <td>{{ data.trassirNvrOnline }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col">
+                            <h1>Всего подразделений: {{ data.facilityCount }}</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div id="safes_chart"></div>
+                        </div>
+                        <div class="col">
+                            <div id="trassir_chart"></div>
+                        </div>
+                    </div>
+
+
+                    <table class="table table-striped mt-5">
+                        <tbody>
+                        <tr>
+                            <td>Всего подразделений: </td>
+                            <td>{{ data.facilityCount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Оборудованы сейфом: </td>
+                            <td>{{ data.equippedWithSafes }}</td>
+                        </tr>
+                        <tr>
+                            <td>Оборудованы Trassir: </td>
+                            <td>{{ data.equippedWithTrassir }}</td>
+                        </tr>
+                        <tr><td></td><td></td></tr>
+                        <tr>
+                            <td>Всего серверов Трассир: </td>
+                            <td>{{ data.trassirNvrCount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Онлайн: </td>
+                            <td>{{ data.trassirNvrOnline }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
                     {% endif %}
+                    {% set notEquippedWithSafes = data.facilityCount - data.equippedWithSafes - data.equippedWithSafesViolations %}
+                    <script>
+                        var chart = c3.generate({
+                            bindto: '#safes_chart',
+                            data: {
+                                columns: [
+                                    ['Equipped', {{ data.equippedWithSafes }}],
+                                    ['With Violations', {{ data.equippedWithSafesViolations }}],
+                                    ['Not equipped', {{ notEquippedWithSafes }}]
+                                ],
+                                type: 'donut',
+                                colors: {
+                                    'Equipped': '#2CA02C',
+                                    'With Violations': '#ff8006',
+                                    'Not equipped': '#D62728',
+                                },
+                            },
+                            donut: {
+                                title: "Safes",
+                                label: {
+                                    format: function (value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
+                    {% set notEquippedWithTrassir = data.facilityCount - data.equippedWithTrassir %}
+                    <script>
+                        var chart = c3.generate({
+                            bindto: '#trassir_chart',
+                            data: {
+                                columns: [
+                                    ['Equipped', {{ data.equippedWithTrassir }}],
+
+                                    ['Not equipped', {{ notEquippedWithTrassir }}]
+                                ],
+                                type: 'donut',
+                                colors: {
+                                    'Equipped': '#2CA02C',
+
+                                    'Not equipped': '#D62728',
+                                },
+                            },
+                            donut: {
+                                title: "Trassir",
+                                label: {
+                                    format: function (value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
                 {% endblock %}
             </div>
-
         </div>
 
     </div>
     {% block ajax_wait_picture %}
         <div class="ajax_wait"><!-- Place at bottom of page --></div>
     {% endblock %}
-{% endblock %}
-
-
-
-{% block javascriptsAfterBody %}
-    <script>
-        $body = $("body");
-        $(document).on({
-            ajaxStart: function () {
-                $body.addClass("loading");
-            },
-            ajaxStop: function () {
-                $body.removeClass("loading");
-            }
-        });
-    </script>
 {% endblock %}
 

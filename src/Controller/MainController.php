@@ -27,12 +27,21 @@ class MainController extends AbstractController
 
         $safesRepo = $this->getDoctrine()->getRepository(Safe::class);
         $equippedWithSafes=0;
+        $equippedWithSafesViolations=0;
         foreach ($facilities as $facility) {
-            if ($safesRepo->findBy(['facility'=>$facility])){
-                $equippedWithSafes++;
+            /** @var Safe $safe */
+            if ($safes = $safesRepo->findBy(['facility'=>$facility])){
+                foreach ($safes as $safe) {
+                    if ($safe->getStatus()=="OK") { //TODO если несколько сейфов в подразделении?
+                        $equippedWithSafes++;
+                    } else {
+                        $equippedWithSafesViolations++;
+                    }
+                }
             }
         }
         $summaryData['equippedWithSafes']  = $equippedWithSafes;
+        $summaryData['equippedWithSafesViolations']  = $equippedWithSafesViolations;
 
         $trassirNnrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNnrRepo->findAll();
