@@ -38,7 +38,6 @@ class AddFacilityForm extends AbstractType
 
                 'attr' =>
                     [
-                    'class' => 'text-capitalize',
                     'readonly'=>true,
                 ]
             ])
@@ -56,7 +55,6 @@ class AddFacilityForm extends AbstractType
             ->add('Street', TextType::class, [
                 'required' => true,
                 'label' => 'Название улицы',
-                'attr' => array('class' => 'text-capitalize'),
             ])
             ->add('House', TextType::class, [
                 'required' => true,
