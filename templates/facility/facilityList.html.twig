@@ -207,7 +207,7 @@
                         }
                         if ($id === addresses.length - 1) {
 
-                            setTimeout(loadMapScenario, 2000);
+                            setTimeout(loadMapScenario, 1000);
                         }
                     }
                 });
@@ -216,9 +216,14 @@
             for (let i = 0; i < addresses.length; i++) {
                 getCoordinatesByAdress(addresses[i]['city'], addresses[i]['street'], addresses[i]['house'], i);
             }
-            
+
             function loadMapScenario() {
                 var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {});
+
+                infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
+                    visible: false
+                });
+                infobox.setMap(map);
 
                 for (var i = 0; i < coordinates.length; i++) {
                     if (coordinates[i]['lat'] !== 'invalid address') {
@@ -228,12 +233,30 @@
 
                         point =new Microsoft.Maps.Location(lat, lon);
                         var pushpin = new Microsoft.Maps.Pushpin(point);
+                        pushpin.metadata =
+                            {
+                                description: coordinates[i]['address'],
+                            };
+                        Microsoft.Maps.Events.addHandler(pushpin, 'click', pushpinClicked);
                         map.entities.push(pushpin);
                     }
                 }
 
             }
         });
+
+        function pushpinClicked(e) {
+            //Make sure the infobox has metadata to display.
+            if (e.target.metadata) {
+                //Set the infobox options with the metadata of the pushpin.
+                infobox.setOptions({
+                    location: e.target.getLocation(),
+                    title: e.target.metadata.title,
+                    description: e.target.metadata.description,
+                    visible: true
+                });
+            }
+        }
     </script>
 
 {% endblock %}
