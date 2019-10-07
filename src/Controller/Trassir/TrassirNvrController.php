@@ -144,7 +144,7 @@ class TrassirNvrController extends AbstractController
 
         $trassirUsersData = [];
         foreach ($trassirNvrDataList as $trassirNvrData) {
-            if ($trassirNvrData !== NULL && array_key_exists('UserNames', $newData->getObjects()) ) {
+            if ($trassirNvrData !== NULL && array_key_exists('UserNames', $trassirNvrData->getObjects() ) ) {
                 foreach ($trassirNvrData->getObjects()['UserNames'] as $username) {
                     $trassirUsersData[$username]['ip'][$trassirNvrData->getTrassirNvrId()->getName()] = $trassirNvrData->getTrassirNvrId()->getIp();
                 }

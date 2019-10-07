@@ -25,7 +25,8 @@ class TrassirDataCollector extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function trassirDataCollect($id, EntityManagerInterface $em) {
+    public function trassirDataCollect($id, EntityManagerInterface $em)
+    {
         $result = true;
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvr = $trassirNvrRepo->find($id);
@@ -36,24 +37,27 @@ class TrassirDataCollector extends AbstractController
             $_ENV['TRASSIR_USER_PASSWORD'],
             $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
-        if($health = $trassirServer->getHealth()) {
+        if ($health = $trassirServer->getHealth()) {
             $trassirNvrData->setHealth($health);
-            $trassirNvrData->setSuccess(true);
+            if (array_key_exists('UserNames', $trassirServer->getHealth())) {
+                $trassirNvrData->setSuccess(true);
+            }
+
         } else {
             $trassirNvrData->setHealth([
-                'status'=>'error',
+                'status' => 'error',
             ]);
             $trassirNvrData->setSuccess(false);
         }
 
-        if($objects = $trassirServer->getServerObjects()){
+        if ($objects = $trassirServer->getServerObjects()) {
             $trassirNvrData->setObjects($objects);
             $trassirNvr->setName($trassirServer->getName());
             $trassirNvr->setGuid($trassirServer->getGuid());
         } else {
-            $result= false;
+            $result = false;
             $trassirNvrData->setObjects([
-                'status'=>'error'
+                'status' => 'error'
             ]);
         }
 
@@ -74,7 +78,8 @@ class TrassirDataCollector extends AbstractController
      * @Route("/trassirDataCollectGroup", name="trassirDataCollectGroup")
      * @throws \Exception
      */
-    public function trassirDataCollectGroup(EntityManagerInterface $em) {
+    public function trassirDataCollectGroup(EntityManagerInterface $em)
+    {
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findNvrsToCollectData();
 
@@ -82,7 +87,7 @@ class TrassirDataCollector extends AbstractController
             $this->trassirDataCollect($nvrToCollectData->getId(), $em);
         }
         return new JsonResponse([
-            'result'=>true,
+            'result' => true,
         ]);
     }
 
@@ -90,7 +95,8 @@ class TrassirDataCollector extends AbstractController
      * @Route("/trassirDataCollectGroupQueue", name="trassirDataCollectGroupQueue")
      *
      */
-    public function trassirDataCollectGroupQueue(EntityManagerInterface $em, MessageBusInterface $messageBus) {
+    public function trassirDataCollectGroupQueue(EntityManagerInterface $em, MessageBusInterface $messageBus)
+    {
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findAll();
 
@@ -100,7 +106,7 @@ class TrassirDataCollector extends AbstractController
             $messageBus->dispatch($message);
         }
         return new JsonResponse([
-            'result'=>true,
+            'result' => true,
         ]);
     }
 
