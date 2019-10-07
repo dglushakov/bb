@@ -135,7 +135,7 @@ class TrassirNvrController extends AbstractController
                 'dateTime' => 'DESC'
             ]);
             $trassirNvrDataList[] = $newData;
-            if ($newData) {
+            if ($newData && array_key_exists('UserNames', $newData->getObjects()) ) {
                 $trassirNvr->users = $newData->getObjects()['UserNames'];
             }
 
@@ -144,7 +144,7 @@ class TrassirNvrController extends AbstractController
 
         $trassirUsersData = [];
         foreach ($trassirNvrDataList as $trassirNvrData) {
-            if ($trassirNvrData !== NULL) {
+            if ($trassirNvrData !== NULL && array_key_exists('UserNames', $newData->getObjects()) ) {
                 foreach ($trassirNvrData->getObjects()['UserNames'] as $username) {
                     $trassirUsersData[$username]['ip'][$trassirNvrData->getTrassirNvrId()->getName()] = $trassirNvrData->getTrassirNvrId()->getIp();
                 }
