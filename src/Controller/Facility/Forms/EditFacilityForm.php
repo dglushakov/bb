@@ -55,6 +55,14 @@ class EditFacilityForm extends AbstractType
                 'required' => false,
                 'label' => 'Помещение',
             ])
+            ->add('Lat', TextType::class, [
+                'required' => false,
+                'label' => 'Latitude',
+            ])
+            ->add('Lon', TextType::class, [
+                'required' => false,
+                'label' => 'Longitude',
+            ])
             ->add('Submit', SubmitType::class);
 
     }

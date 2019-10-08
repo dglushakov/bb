@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FacilityController extends AbstractController
@@ -40,7 +41,7 @@ class FacilityController extends AbstractController
         $safesRepo = $this->getDoctrine()->getRepository(Safe::class);
         $alarmSystems = $this->getDoctrine()->getRepository(AlarmSystem::class);
 
-        $nvrCount=[];
+        $nvrCount = [];
         foreach ($facilityList as $facility) {
             $nvrCount[$facility->getId()] = count($trassirNvrRepo->findBy(['facility' => $facility]));
             $nvrCount[$facility->getId()] += count($safesRepo->findBy(['facility' => $facility]));
@@ -55,10 +56,10 @@ class FacilityController extends AbstractController
             $formData = $request->request->get('add_facility_form');
 
             $isDuplicated = $facilityRepo->findBy([
-                'country' =>$formData['Country'],
-                'city' =>$formData['City'],
-                'street' =>$formData['Street'],
-                'house' =>$formData['House'],
+                'country' => $formData['Country'],
+                'city' => $formData['City'],
+                'street' => $formData['Street'],
+                'house' => $formData['House'],
             ]);
 
             if (!$isDuplicated) {
@@ -73,6 +74,7 @@ class FacilityController extends AbstractController
 
                 $em->persist($newFacility);
                 $em->flush();
+                $this->refreshCoordinates($newFacility->getId(), $em);
                 return $this->redirectToRoute('facilitylist');
             }
 
@@ -112,6 +114,8 @@ class FacilityController extends AbstractController
             $facilityToEdit->setBuilding($data->getBuilding());
             $facilityToEdit->setRoom($data->getRoom());
 
+            $facilityToEdit->setLat($data->getLat());
+            $facilityToEdit->setLon($data->getLon());
 
 
             $em->persist($facilityToEdit);
@@ -121,6 +125,7 @@ class FacilityController extends AbstractController
 
         return $this->render('facility/editFacility.html.twig', [
             'editFacilityForm' => $editFacilityForm->createView(),
+            'facility' => $facilityToEdit,
         ]);
     }
 
@@ -168,22 +173,68 @@ class FacilityController extends AbstractController
         $safeRepo = $this->getDoctrine()->getRepository(Safe::class);
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
 
-        $trassirNvrList = $trassirNvrRepo->findBy(['facility'=>$facilityToShow]);
+        $trassirNvrList = $trassirNvrRepo->findBy(['facility' => $facilityToShow]);
 
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $trassirHealth=[];
-        foreach ($trassirNvrList as $trassirNvr){
-            $trassirHealth[$trassirNvr->getId()] = $trassirDataRepo->findOneBy(['trassirNvrId'=>$trassirNvr->getId()],['dateTime'=>'DESC']);
+        $trassirHealth = [];
+        foreach ($trassirNvrList as $trassirNvr) {
+            $trassirHealth[$trassirNvr->getId()] = $trassirDataRepo->findOneBy(['trassirNvrId' => $trassirNvr->getId()], ['dateTime' => 'DESC']);
         }
 
         return $this->render('facility/facilityPassport.html.twig', [
-           'facility' => $facilityToShow,
-            'securityDevices' => $securityDeviceRepo->findBy(['facility'=>$facilityToShow]),
-            'safes' => $safeRepo->findBy(['facility'=>$facilityToShow]),
+            'facility' => $facilityToShow,
+            'securityDevices' => $securityDeviceRepo->findBy(['facility' => $facilityToShow]),
+            'safes' => $safeRepo->findBy(['facility' => $facilityToShow]),
             'trassirNvr' => $trassirNvrList,
             'trassirNvrHealth' => $trassirHealth,
         ]);
     }
 
+    /**
+     * @Route("/refreshCoordinates/{id}" , name ="refreshCoordinates")
+     */
+    public function refreshCoordinates($id, EntityManagerInterface $entityManager)
+    {
+        $this->denyAccessUnlessGranted('ROLE_FACILITY');
+
+        $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
+        /**@var $facility Facility */
+        $facility = $facilityRepo->find($id);
+
+
+        $url = 'https://nominatim.openstreetmap.org/search?';
+        $params =
+            [
+                'city'=>$facility->getCity(),
+                'street'=>$facility->getStreet(),
+                'housenumber'=>$facility->getHouse(),
+                'format'=>'json',
+                'limit'=>1
+            ];
+        $ch = curl_init($url.http_build_query($params));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        $output = curl_exec($ch);
+        curl_close($ch);
+
+        $output = json_decode($output);
+
+        if (!empty($output[0])) {
+            $facility->setLat($output[0]->lat);
+            $facility->setLon($output[0]->lon);
+        } else {
+            $facility->setLat("error");
+            $facility->setLon("error");
+        }
+
+
+        $entityManager->persist($facility);
+        $entityManager->flush();
+
+        //$geoTargetData = json_decode($result, true); //переводим JSON в массив
+        return new JsonResponse($output);
+    }
 
 }

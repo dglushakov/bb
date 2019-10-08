@@ -245,6 +245,16 @@ class Facility
      */
     private $buildingType;
 
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    private $lon;
+
 
     public function getId(): ?int
     {
@@ -1750,6 +1760,30 @@ class Facility
     public function setBuildingType(?string $buildingType): self
     {
         $this->buildingType = $buildingType;
+
+        return $this;
+    }
+
+    public function getLat(): ?string
+    {
+        return $this->lat;
+    }
+
+    public function setLat(?string $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLon(): ?string
+    {
+        return $this->lon;
+    }
+
+    public function setLon(?string $lon): self
+    {
+        $this->lon = $lon;
 
         return $this;
     }

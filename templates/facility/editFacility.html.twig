@@ -17,11 +17,28 @@
             {{ form_end(editFacilityForm) }}
         </div>
     </div>
-
+    <div class="row">
+        <div class="col">
+            <a id="refreshCoordinatesButton" href=""
+               class="btn btn-success">Refresh Coordinates</a>
+        </div>
+    </div>
 {% endblock %}
 
 
 {% block javascriptsAfterBody %}
     {{ parent() }}
 
+    <script>
+
+        $("#refreshCoordinatesButton").click(function () {
+            var path = '{{ path('refreshCoordinates', {id: facility.id}) }}';
+            $.ajax({
+                method: "POST",
+                url: path,
+            }).done(function (data) {
+                location.reload();
+            })
+        });
+    </script>
 {% endblock %}
