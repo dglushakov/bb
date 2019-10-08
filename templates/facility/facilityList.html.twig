@@ -2,13 +2,16 @@
 
 {% block javascriptsBeforeBody %}
     {{ parent() }}
-    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AtrbFcv5kIq0_lr7oP2X9gCjolUGnrCC7zmicDR8cDymFpqV5Pm0JvGU0joAa3I3' async defer></script>
+
+    <script type='text/javascript'
+            src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AtrbFcv5kIq0_lr7oP2X9gCjolUGnrCC7zmicDR8cDymFpqV5Pm0JvGU0joAa3I3'
+            async defer></script>
 
 {% endblock %}
 {% block main %}
     <div class="row m-2">
         <div class="col">
-            <div id='myMap' style='width: 100%; height: 400px;'></div>
+            <div id='myMap' style='width: 100%; height: 600px;'></div>
         </div>
     </div>
     {% if is_granted('ROLE_NVR_ADD') %}
@@ -174,31 +177,26 @@
     </script>
 
     <script>
-
         $(document).ready(function () {
             var addresses = [];
             var coordinates = [];
-
             {% for facility in facilities %}
-                {% set i = loop.index-1 %}
-                addresses[{{ i }}] = [];
-                addresses[{{ i }}]['city'] = '{{ facility.city }}';
-                addresses[{{ i }}]['street'] = '{{ facility.street }}';
-                addresses[{{ i }}]['house'] = '{{ facility.house }}';
+            {% set i = loop.index-1 %}
+            addresses[{{ i }}] = [];
+            addresses[{{ i }}]['city'] = '{{ facility.city }}';
+            addresses[{{ i }}]['street'] = '{{ facility.street }}';
+            addresses[{{ i }}]['house'] = '{{ facility.house }}';
             {% endfor %}
-
 
             function getCoordinatesByAdress($city, $street, $house, $id) {
                 var url;
                 url = 'https://nominatim.openstreetmap.org/search?city=' + $city + '&street=' + $street + ' ' + $house + '&format=json&limit=1';
-
                 coordinates[$id] = [];
                 coordinates[$id]['address'] = $city + ' ' + $street + ' ' + $house;
                 $.ajax({
                     url: url,
                     success: function (data) {
                         if (data.length !== 0) {
-
                             coordinates[$id]['lat'] = data[0]['lat'];
                             coordinates[$id]['lon'] = data[0]['lon'];
                         } else {
@@ -206,8 +204,7 @@
                             coordinates[$id]['lon'] = 'invalid address';
                         }
                         if ($id === addresses.length - 1) {
-
-                            setTimeout(loadMapScenario, 1000);
+                            setTimeout(GetMap, 1000);
                         }
                     }
                 });
@@ -217,46 +214,29 @@
                 getCoordinatesByAdress(addresses[i]['city'], addresses[i]['street'], addresses[i]['house'], i);
             }
 
-            function loadMapScenario() {
-                var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {});
 
-                infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
-                    visible: false
+            var map, clusterLayer;
+
+            function GetMap() {
+                map = new Microsoft.Maps.Map('#myMap', {
+                    zoom: 3,
                 });
-                infobox.setMap(map);
-
-                for (var i = 0; i < coordinates.length; i++) {
-                    if (coordinates[i]['lat'] !== 'invalid address') {
-
-                        var lat = coordinates[i]['lat'];
-                        var lon = coordinates[i]['lon'];
-
-                        point =new Microsoft.Maps.Location(lat, lon);
-                        var pushpin = new Microsoft.Maps.Pushpin(point);
-                        pushpin.metadata =
-                            {
-                                description: coordinates[i]['address'],
-                            };
-                        Microsoft.Maps.Events.addHandler(pushpin, 'click', pushpinClicked);
-                        map.entities.push(pushpin);
+                Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function () {
+                    var pins = [];
+                    for (var i = 0; i < coordinates.length; i++) {
+                        if (coordinates[i]['lat'] !== 'invalid address') {
+                            var pin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(coordinates[i]['lat'], coordinates[i]['lon']));
+                            //Store the original data object in the pushpins metadata so that you can access other properties like Name.
+                            pin.metedata = coordinates[i];
+                            pins.push(pin);
+                        }
                     }
-                }
 
+                    clusterLayer = new Microsoft.Maps.ClusterLayer(pins);
+                    map.layers.insert(clusterLayer);
+                });
             }
         });
-
-        function pushpinClicked(e) {
-            //Make sure the infobox has metadata to display.
-            if (e.target.metadata) {
-                //Set the infobox options with the metadata of the pushpin.
-                infobox.setOptions({
-                    location: e.target.getLocation(),
-                    title: e.target.metadata.title,
-                    description: e.target.metadata.description,
-                    visible: true
-                });
-            }
-        }
     </script>
 
 {% endblock %}
