@@ -190,7 +190,7 @@
 
             function getCoordinatesByAdress($city, $street, $house, $id) {
                 var url;
-                url = 'https://nominatim.openstreetmap.org/search?city=' + $city + '&street=' + $street + ' ' + $house + '&format=json&limit=1';
+                url = 'https://nominatim.openstreetmap.org/search?city=' + $city + '&street=' + $street + '&housenumber' + $house + '&format=json&limit=1';
                 coordinates[$id] = [];
                 coordinates[$id]['address'] = $city + ' ' + $street + ' ' + $house;
                 $.ajax({
