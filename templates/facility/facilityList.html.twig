@@ -221,6 +221,15 @@
                 map = new Microsoft.Maps.Map('#myMap', {
                     zoom: 3,
                 });
+
+                //Create an infobox at the center of the map but don't show it.
+                infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
+                    visible: false
+                });
+
+                //Assign the infobox to a map instance.
+                infobox.setMap(map);
+
                 Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function () {
                     var pins = [];
                     for (var i = 0; i < coordinates.length; i++) {
@@ -228,13 +237,33 @@
                             var pin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(coordinates[i]['lat'], coordinates[i]['lon']));
                             //Store the original data object in the pushpins metadata so that you can access other properties like Name.
                             pin.metedata = coordinates[i];
+                            pin.metadata = {
+                                description: coordinates[i]['address'],
+                            };
+                            Microsoft.Maps.Events.addHandler(pin, 'click', pushpinClicked);
                             pins.push(pin);
+                        }
+                        if (coordinates[i]['lat'] === 'invalid address') {
+                            console.log('can not convert address to coordinates ');
+                            console.log(coordinates[i]);
                         }
                     }
 
                     clusterLayer = new Microsoft.Maps.ClusterLayer(pins);
                     map.layers.insert(clusterLayer);
                 });
+            }
+            function pushpinClicked(e) {
+                //Make sure the infobox has metadata to display.
+                if (e.target.metadata) {
+                    //Set the infobox options with the metadata of the pushpin.
+                    infobox.setOptions({
+                        location: e.target.getLocation(),
+                        title: e.target.metadata.title,
+                        description: e.target.metadata.description,
+                        visible: true
+                    });
+                }
             }
         });
     </script>
