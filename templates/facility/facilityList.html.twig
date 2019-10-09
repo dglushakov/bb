@@ -96,6 +96,9 @@
                     <th class="tr_fixed">
                         Actions
                     </th>
+                    <th class="tr_fixed">
+                        GPS
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="pt-5">
@@ -124,6 +127,11 @@
                                    data-target="#confirm-delete" class="btn btn-sm delete-type">
                                     <img alt="delete" width="20px" src="{{ asset('img/cancel.png') }}">
                                 </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if facility.lat is not null and facility.lat != 'error' %}
+                                <img alt="gps" width="20px" src="{{ asset('img/target_32.png') }}">
                             {% endif %}
                         </td>
                     </tr>
