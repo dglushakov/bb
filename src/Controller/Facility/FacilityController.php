@@ -74,7 +74,7 @@ class FacilityController extends AbstractController
 
                 $em->persist($newFacility);
                 $em->flush();
-                $this->refreshCoordinates($newFacility->getId(), $em);
+
                 return $this->redirectToRoute('facilitylist');
             }
 
@@ -191,50 +191,25 @@ class FacilityController extends AbstractController
     }
 
     /**
-     * @Route("/refreshCoordinates/{id}" , name ="refreshCoordinates")
+     * @Route("/setCoordinates/{id}/{lat}/{lon}" , name ="setCoordinates")
      */
-    public function refreshCoordinates($id, EntityManagerInterface $entityManager)
+    public function setCoordinates(EntityManagerInterface $entityManager, $id=null, $lat=null, $lon=null)
     {
         $this->denyAccessUnlessGranted('ROLE_FACILITY');
+        if($id!=null && $lat!=null && $lon != null) {
+            $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
+            /**@var $facility Facility */
+            $facility = $facilityRepo->find($id);
 
-        $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
-        /**@var $facility Facility */
-        $facility = $facilityRepo->find($id);
+            $facility->setLat($lat);
+            $facility->setLon($lon);
 
-
-        $url = 'https://nominatim.openstreetmap.org/search?';
-        $params =
-            [
-                'city'=>$facility->getCity(),
-                'street'=>$facility->getStreet(),
-                'housenumber'=>$facility->getHouse(),
-                'format'=>'json',
-                'limit'=>1
-            ];
-        $ch = curl_init($url.http_build_query($params));
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
-        $output = curl_exec($ch);
-        curl_close($ch);
-
-        $output = json_decode($output);
-
-        if (!empty($output[0])) {
-            $facility->setLat($output[0]->lat);
-            $facility->setLon($output[0]->lon);
-        } else {
-            $facility->setLat("error");
-            $facility->setLon("error");
+            $entityManager->persist($facility);
+            $entityManager->flush();
         }
 
 
-        $entityManager->persist($facility);
-        $entityManager->flush();
-
-        //$geoTargetData = json_decode($result, true); //переводим JSON в массив
-        return new JsonResponse($output);
+        return new JsonResponse('done');
     }
 
 }

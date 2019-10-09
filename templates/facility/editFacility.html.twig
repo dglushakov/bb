@@ -31,14 +31,46 @@
 
     <script>
 
-        $("#refreshCoordinatesButton").click(function () {
-            var path = '{{ path('refreshCoordinates', {id: facility.id}) }}';
+        $("#refreshCoordinatesButton").click(function (e) {
+            e.preventDefault();
+            $('#edit_facility_form_Lat').val('....');
+            $('#edit_facility_form_Lon').val('....');
+            url = 'https://nominatim.openstreetmap.org/search?city={{ facility.city }}&street={{ facility.street }}&housenumber{{ facility.house }}&format=json&limit=1';
             $.ajax({
-                method: "POST",
-                url: path,
-            }).done(function (data) {
-                location.reload();
-            })
+                url: url,
+                success: function (data) {
+                    if (data.length !== 0) {
+                        console.log(data);
+                        $lat = data[0]['lat'];
+                        $lon = data[0]['lon'];
+                    } else {
+                        $lat = 'invalid address';
+                        $lon = 'invalid address';
+                    }
+                    console.log($lat, $lon);
+                    setCoordinates($lat, $lon);
+                    console.log('ready to show');
+                }
+            });
+
         });
+
+
+        function setCoordinates(lat, lon) {
+
+            var path = '{{path('setCoordinates')}}';
+            var url = path+'/{{ facility.id }}/' + lat + '/' + lon;
+            console.log(url);
+
+            $.ajax({
+                method: "GET",
+                url: url
+
+            }).done(function (data) {
+            });
+
+            $('#edit_facility_form_Lat').val(lat);
+            $('#edit_facility_form_Lon').val(lon);
+        }
     </script>
 {% endblock %}
