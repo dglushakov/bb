@@ -130,7 +130,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if facility.lat is not null and facility.lat != 'error' %}
+                            {% if facility.lat is not null and facility.lat != 'error' and facility.lat != 'invalid address' %}
                                 <img alt="gps" width="20px" src="{{ asset('img/target_32.png') }}">
                             {% endif %}
                         </td>
