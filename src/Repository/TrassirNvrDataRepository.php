@@ -31,6 +31,19 @@ class TrassirNvrDataRepository extends ServiceEntityRepository
             ;
     }
 
+
+    public function getLastDataForEachNvr(){
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT nvr_data2.nvr, nvr_data2.time, nvr_data1.success
+                FROM trassir_nvr_data as nvr_data1
+	            JOIN (SELECT MAX(date_time) as time, trassir_nvr_id_id as nvr FROM trassir_nvr_data GROUP BY trassir_nvr_id_id) as nvr_data2
+                ON nvr_data1.trassir_nvr_id_id = nvr_data2.nvr AND nvr_data1.date_time=nvr_data2.time';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $res =$stmt->fetchAll();
+        return $res;
+    }
     // /**
     //  * @return TrassirNvrData[] Returns an array of TrassirNvrData objects
     //  */

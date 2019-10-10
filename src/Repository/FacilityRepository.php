@@ -19,6 +19,17 @@ class FacilityRepository extends ServiceEntityRepository
         parent::__construct($registry, Facility::class);
     }
 
+    public function getFacilityIdList()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT id FROM Facility';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $res =$stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
+
+        return $res;
+    }
+
     // /**
     //  * @return Facility[] Returns an array of Facility objects
     //  */

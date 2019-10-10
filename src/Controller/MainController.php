@@ -16,65 +16,83 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function home(){
+    public function home()
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $summaryData=[];
+        $summaryData = [];
 
         $facilityRepo = $this->getDoctrine()->getRepository(Facility::class);
-        $facilities = $facilityRepo->findAll();
-        $facilityCount = count($facilities);
+        $facilityIdArray = $facilityRepo->getFacilityIdList();
+
+        $facilityCount = count($facilityIdArray);
         $summaryData['facilityCount'] = $facilityCount;
 
         $safesRepo = $this->getDoctrine()->getRepository(Safe::class);
-        $equippedWithSafes=0;
-        $equippedWithSafesViolations=0;
-        foreach ($facilities as $facility) {
-            /** @var Safe $safe */
-            if ($safes = $safesRepo->findBy(['facility'=>$facility])){
-                foreach ($safes as $safe) {
-                    if ($safe->getStatus()=="OK") { //TODO если несколько сейфов в подразделении?
-                        $equippedWithSafes++;
-                    } else {
-                        $equippedWithSafesViolations++;
-                    }
+        $safesArray = $safesRepo->getSafesArrayByFacilityIdArray($facilityIdArray);
+
+        $equippedWithSafes = 0;
+        $equippedWithSafesViolations = 0;
+
+        $previousFacility=0;
+        foreach ($safesArray as $safe){
+            if ($safe['facility_id']!=$previousFacility) {
+                if ($safe['status'] == "Violations") {
+                    $equippedWithSafesViolations++;
+                }
+                if ($safe['status'] == "OK") {
+                    $equippedWithSafes++;
+                }
+            } else {
+                if ($safe['status'] == "Violations") {
+                    $equippedWithSafes--;
+                    $equippedWithSafesViolations ++;
                 }
             }
+            $previousFacility = $safe['facility_id'];
         }
-        $summaryData['equippedWithSafes']  = $equippedWithSafes;
-        $summaryData['equippedWithSafesViolations']  = $equippedWithSafesViolations;
+        $summaryData['equippedWithSafes'] = $equippedWithSafes;
+        $summaryData['equippedWithSafesViolations'] = $equippedWithSafesViolations;
 
-        $trassirNnrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
-        $trassirNvrList = $trassirNnrRepo->findAll();
-        $summaryData['trassirNvrCount'] = count($trassirNvrList);
-        $equippedWithTrassir=0;
-        foreach ($facilities as $facility) {
-            if ($trassirNnrRepo->findBy(['facility'=>$facility])){
+        $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
+        $summaryData['trassirNvrCount'] = $trassirNvrRepo->count([]);
+
+        $trassirNvrArray = $trassirNvrRepo->getNvrArrayByFacilityIdArray($facilityIdArray);
+
+        $equippedWithTrassir = 0;
+
+        $previousFacility=0;
+        foreach ($trassirNvrArray as $trassirNvr) {
+            if ($previousFacility != $trassirNvr['facility_id']) {
                 $equippedWithTrassir++;
             }
+            $previousFacility= $trassirNvr['facility_id'];
         }
-        $summaryData['equippedWithTrassir']  = $equippedWithTrassir;
+        $summaryData['equippedWithTrassir'] = $equippedWithTrassir;
+
 
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $trassirHealth=[];
-        foreach ($trassirNvrList as $trassirNvr){
-            $trassirHealth[$trassirNvr->getId()] =
-                $trassirDataRepo->findOneBy(['trassirNvrId'=>$trassirNvr->getId()],['dateTime'=>'DESC']);
-        }
+        $trassirData = $trassirDataRepo->getLastDataForEachNvr();
+        $trassirNvrOnline = 0;
 
-        $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $trassirNvrOnline=0;
-        foreach ($trassirNvrList as $trassirNvr){
-
-            $health = $trassirDataRepo->findOneBy(['trassirNvrId'=>$trassirNvr->getId()],['dateTime'=>'DESC']);
-            if ($health and !isset($health->getHealth()['status']) ) {
+        foreach ($trassirData as $data) {
+            if ($data['success']==1){
                 $trassirNvrOnline++;
             }
         }
-        $summaryData['trassirNvrOnline']  = $trassirNvrOnline;
+
+        $summaryData['trassirNvrOnline'] = $trassirNvrOnline;
+//        foreach ($trassirNvrList as $trassirNvr) {
+//
+//            $health = $trassirDataRepo->findOneBy(['trassirNvrId' => $trassirNvr->getId()], ['dateTime' => 'DESC']);
+//            if ($health and !isset($health->getHealth()['status'])) {
+//                $trassirNvrOnline++;
+//            }
+//        }
+
 
 
         return $this->render('home.html.twig', [
-            'data'=>$summaryData,
+            'data' => $summaryData,
         ]);
     }
 

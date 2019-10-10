@@ -37,6 +37,18 @@ class TrassirNvrRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    public function getNvrArrayByFacilityIdArray($facilityIdArray){
+
+        $facilityString = implode(",", $facilityIdArray);
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM trassir_nvr WHERE facility_id IN($facilityString) ORDER BY facility_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $res =$stmt->fetchAll();
+
+        return $res;
+    }
     // /**
     //  * @return TrassirNvr[] Returns an array of TrassirNvr objects
     //  */

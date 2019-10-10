@@ -19,6 +19,18 @@ class SafeRepository extends ServiceEntityRepository
         parent::__construct($registry, Safe::class);
     }
 
+
+    public function getSafesArrayByFacilityIdArray($facilityIdArray){
+
+        $facilityString = implode(",", $facilityIdArray);
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM safe WHERE facility_id IN($facilityString) ORDER BY facility_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $res =$stmt->fetchAll();
+
+        return $res;
+    }
     // /**
     //  * @return Safe[] Returns an array of Safe objects
     //  */
