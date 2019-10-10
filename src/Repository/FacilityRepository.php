@@ -22,7 +22,7 @@ class FacilityRepository extends ServiceEntityRepository
     public function getFacilityIdList()
     {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT id FROM Facility';
+        $sql = 'SELECT id FROM facility';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $res =$stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
