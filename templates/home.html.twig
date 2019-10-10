@@ -51,6 +51,14 @@
                             <td>{{ data.equippedWithSafes }}</td>
                         </tr>
                         <tr>
+                            <td>Оборудованы сейфом с нарушениями: </td>
+                            <td>{{ data.equippedWithSafesViolations }}</td>
+                        </tr>
+                        <tr>
+                            <td>Не оборудованы сейфом: </td>
+                            <td>{{ data.facilityCount - data.equippedWithSafes - data.equippedWithSafesViolations }}</td>
+                        </tr>
+                        <tr>
                             <td>Оборудованы Trassir: </td>
                             <td>{{ data.equippedWithTrassir }}</td>
                         </tr>
@@ -73,17 +81,13 @@
                             bindto: '#safes_chart',
                             data: {
                                 columns: [
-                                    ['Equipped', {{ data.equippedWithSafes }}],
-                                    ['With Violations', {{ data.equippedWithSafesViolations }}],
-                                    ['Not equipped', {{ notEquippedWithSafes }}]
+                                    ['Equipped'+' ({{ data.equippedWithSafes }})', {{ data.equippedWithSafes }}],
+                                    ['With Violations'+' ({{ data.equippedWithSafesViolations }})', {{ data.equippedWithSafesViolations }}],
+                                    ['Not equipped'+' ({{ notEquippedWithSafes }})', {{ notEquippedWithSafes }}]
                                 ],
                                 type: 'donut',
-                                colors: {
-                                    'Equipped': '#2CA02C',
-                                    'With Violations': '#ff8006',
-                                    'Not equipped': '#D62728',
-                                },
                             },
+                            color: { pattern: [ '#2CA02C', '#ff8006', '#D62728'] },
                             donut: {
                                 title: "Safes",
                                 label: {
@@ -101,15 +105,12 @@
                             bindto: '#trassir_chart',
                             data: {
                                 columns: [
-                                    ['Equipped', {{ data.equippedWithTrassir }}],
-                                    ['Not equipped', {{ notEquippedWithTrassir }}]
+                                    ['Equipped'+' ({{ data.equippedWithTrassir }})', {{ data.equippedWithTrassir }}],
+                                    ['Not equipped'+' ({{ notEquippedWithTrassir }})', {{ notEquippedWithTrassir }}]
                                 ],
                                 type: 'donut',
-                                colors: {
-                                    'Equipped': '#2CA02C',
-                                    'Not equipped': '#D62728',
-                                },
                             },
+                            color: { pattern: [ '#2CA02C', '#D62728'] },
                             donut: {
                                 title: "Trassir installation",
                                 label: {
@@ -127,15 +128,12 @@
                             bindto: '#trassir_nvr_chart',
                             data: {
                                 columns: [
-                                    ['Online', {{ data.trassirNvrOnline }}],
-                                    ['Offline', {{ data.trassirNvrCount - data.trassirNvrOnline }}]
+                                    ['Online'+' ({{ data.trassirNvrOnline }})', {{ data.trassirNvrOnline }}],
+                                    ['Offline'+' ({{ data.trassirNvrCount - data.trassirNvrOnline }})', {{ data.trassirNvrCount - data.trassirNvrOnline }}]
                                 ],
                                 type: 'donut',
-                                colors: {
-                                    'Online': '#2CA02C',
-                                    'Offline': '#D62728',
-                                },
                             },
+                            color: { pattern: [ '#2CA02C', '#D62728'] },
                             donut: {
                                 title: "Trassir NVR status",
                                 label: {

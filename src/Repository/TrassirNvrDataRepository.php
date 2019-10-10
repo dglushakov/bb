@@ -44,6 +44,7 @@ class TrassirNvrDataRepository extends ServiceEntityRepository
         $res =$stmt->fetchAll();
         return $res;
     }
+
     // /**
     //  * @return TrassirNvrData[] Returns an array of TrassirNvrData objects
     //  */
