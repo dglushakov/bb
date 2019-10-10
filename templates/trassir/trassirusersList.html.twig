@@ -1,15 +1,20 @@
 {% extends 'home.html.twig' %}
 
 {% block main %}
-    <table class="table table-striped mt-4">
+    <table class="table table-striped mt-4" id="usersTable">
         <thead>
         <tr>
             <th class="tr_fixed">
+                <div><span>
                 #
+                </span></div>
             </th>
             <th class="tr_fixed">
+                <div><span>
                 Login
+                </span></div>
             </th>
+            {% set nvrListForCSV ='' %}
             {% for key, nvr in nvrList %}
                 {% if nvr.Id is defined %}
                     <th class="col text-nowrap tex-vertical tr_fixed" title="
@@ -21,8 +26,10 @@
                         <div><span>
                             {% if nvr.name is defined and nvr.name!="" %}
                                 {{ nvr.name }}
+                                {% set nvrListForCSV = nvrListForCSV~nvr.name~';' %}
                             {% else %}
                                 {{ nvr.Ip }}
+                                {% set nvrListForCSV = nvrListForCSV~nvr.Ip~';' %}
                             {% endif %}
                         </span></div>
                     </th>
@@ -56,9 +63,30 @@
             </tr>
         {% endfor %}
         </tbody>
-
+        <button onclick="download_csv()">Download CSV</button>
     </table>
 
+    <script>
 
+        function download_csv() {
+            var csv ='_;Login;'+'{{ nvrListForCSV }}'+'\n';
+
+            $('#usersTable tbody tr').each(function () {
+                $(this).find('td').each(function () {
+                    //do your stuff, you can use $(this) to get current cell
+
+                    csv += $(this).text().trim() + ';';
+                });
+
+                csv += '\n';
+            });
+
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = 'trassirUsers.csv';
+            hiddenElement.click();
+        }
+    </script>
 
 {% endblock %}
