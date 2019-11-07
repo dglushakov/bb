@@ -125,6 +125,7 @@ class SecurityDevicesController extends AbstractController
 
         return $this->render('equipment/alarmList.html.twig', [
             'alarmSystemsList' => $alarmSystemsList,
+            'securityProvidersList' => AlarmSystem::getSecurityProvidersList(),
             'addAlarmSystemForm' => $addAlarmSystemForm->createView(),
         ]);
     }

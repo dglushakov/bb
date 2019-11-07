@@ -16,10 +16,30 @@
             {{ form_end(addAlarmSystemForm) }}
         </div>
     </div>
+    {%  set providersCount=[] %}
+    {% for providerName in securityProvidersList %}
+        {% set providersCount = providersCount|merge({ (providerName):0 }) %}
+    {% endfor %}
+    {% set withoutProvider = 0 %}
+
+    {% for alarmSystem in alarmSystemsList %}
+        {% if alarmSystem.securityProvider is defined and alarmSystem.securityProvider is not empty %}
+            {% set providersCount = providersCount|merge({ (alarmSystem.securityProvider): (providersCount[ (alarmSystem.securityProvider) ])+1 }) %}
+        {% else  %}
+            {% set withoutProvider = withoutProvider+1 %}
+        {% endif %}
+    {% endfor %}
 
 
+    <div class="row">
+        <div class="col">
 
-
+            {% for providerName in securityProvidersList %}
+                <h4>{{ providerName~': '~ providersCount[providerName] }}</h4>
+            {% endfor %}
+            <h4>Подрядчик не указан: {{ withoutProvider }}</h4>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
 
@@ -28,8 +48,8 @@
                 <tr>
                     <th>#</th>
                     <th>Facility</th>
-                    <th>Actions</th>
                     <th>Provider</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
