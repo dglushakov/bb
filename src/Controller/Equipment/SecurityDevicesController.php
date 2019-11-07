@@ -121,7 +121,7 @@ class SecurityDevicesController extends AbstractController
         }
 
         $alarmSystemsRepo = $this->getDoctrine()->getRepository(AlarmSystem::class);
-        $alarmSystemsList = $alarmSystemsRepo->findAll();
+        $alarmSystemsList = $alarmSystemsRepo->findBy([],['securityProvider'=>'ASC']);
 
         return $this->render('equipment/alarmList.html.twig', [
             'alarmSystemsList' => $alarmSystemsList,

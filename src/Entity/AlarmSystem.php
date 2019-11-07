@@ -62,6 +62,20 @@ class AlarmSystem
      */
     private $wearable_button;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $securityProvider;
+
+    public static function getSecurityProvidersList() {
+        $secProvideers=[
+            'Гольфстрим'=>'Гольфстрим',
+            'Дельта'=>'Дельта',
+            'Локальный подрядчик'=>'Локальный подрядчик',
+        ];
+
+        return $secProvideers;
+    }
 
     public function getId(): ?int
     {
@@ -161,6 +175,18 @@ class AlarmSystem
     public function setWearableButton(?int $wearable_button): self
     {
         $this->wearable_button = $wearable_button;
+
+        return $this;
+    }
+
+    public function getSecurityProvider(): ?string
+    {
+        return $this->securityProvider;
+    }
+
+    public function setSecurityProvider(?string $securityProvider): self
+    {
+        $this->securityProvider = $securityProvider;
 
         return $this;
     }

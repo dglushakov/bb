@@ -4,12 +4,15 @@
 namespace App\Controller\Equipment\Form;
 
 
+use App\Entity\AlarmSystem;
 use App\Entity\Facility;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class AddAlarmSystemForm extends AbstractType
@@ -19,6 +22,11 @@ class AddAlarmSystemForm extends AbstractType
     {
 
         $builder
+            ->add('securityProvider', ChoiceType::class, [
+                'label' => 'Подрядчик',
+                'required' => false,
+                'choices' => AlarmSystem::getSecurityProvidersList(),
+            ])
             ->add('pkp', IntegerType::class, [
                 'label' => 'ПКП',
                 'required' => false,

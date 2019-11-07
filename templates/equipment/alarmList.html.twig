@@ -29,6 +29,7 @@
                     <th>#</th>
                     <th>Facility</th>
                     <th>Actions</th>
+                    <th>Provider</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,7 @@
                     <tr>
                         <td>#</td>
                         <td>{{ alarmSystem.facility.address }}</td>
+                        <td>{{ alarmSystem.securityProvider ?? '' }}</td>
                         <td>
                             <a href="/alarm/edit/{{ alarmSystem.id }}" class="btn btn-sm"><img
                                         alt="edit"
