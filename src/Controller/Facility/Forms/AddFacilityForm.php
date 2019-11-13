@@ -26,7 +26,10 @@ class AddFacilityForm extends AbstractType
                 'required' => false,
                 'label' => 'Индекс',
             ])
-
+            ->add('lmcode', TextType::class, [
+                'required' => false,
+                'label' => 'Lme код',
+            ])
             ->add('Country', ChoiceType::class, [
                 'choices' => Facility::COUNTRIES,
                 'label' => 'Страна',
