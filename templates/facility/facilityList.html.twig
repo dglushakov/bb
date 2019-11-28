@@ -97,6 +97,12 @@
                         Name
                     </th>
                     <th class="tr_fixed">
+                        Type
+                    </th>
+                    <th class="tr_fixed">
+                        Lmcode
+                    </th>
+                    <th class="tr_fixed">
                         Address
                     </th>
                     <th class="tr_fixed">
@@ -120,6 +126,8 @@
                                 {{ facility.name }}
                             </a>
                         </td>
+                        <td>{{ facility.facilityType }}</td>
+                        <td>{{ facility.lmcode }}</td>
                         <td>{{ facility.address }}</td>
                         <td>
                             <a href="/facility/edit/{{ facility.id }}" class="btn btn-sm"><img
