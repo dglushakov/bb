@@ -31,6 +31,11 @@ class EditFacilityForm extends AbstractType
                 'required' => false,
                 'label' => 'Lme код',
             ])
+            ->add('facilityType', ChoiceType::class, [
+                'choices' => Facility::getFacilityTypes(),
+                'label' => 'Тип подразделения',
+                'required' => false,
+            ])
             ->add('StreetType', ChoiceType::class, [
                 'choices' => array_flip(Facility::getStreetTypes()),
                 'label' => 'Тип улицы',

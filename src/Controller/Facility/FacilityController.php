@@ -62,7 +62,12 @@ class FacilityController extends AbstractController
                 'house' => $formData['House'],
             ]);
 
-            if (!$isDuplicated) {
+            $isDuplicatedLmcode = $facilityRepo->findBy([
+                'lmcode' => $formData['lmcode'],
+
+            ]);
+
+            if (!$isDuplicated && !$isDuplicatedLmcode) {
                 if ($newFacility->getCity() === null) {
                     $newFacility->setCity(trim($formData['City']));
                     $newFacility->setRegion(trim($formData['Region']));
@@ -77,6 +82,8 @@ class FacilityController extends AbstractController
 
                 return $this->redirectToRoute('facilitylist');
             }
+
+
 
         }
 
