@@ -271,6 +271,8 @@ class Facility
             'PUP' => 'PUP',
             'TWH' => 'TWH',
             'Hybrid' => 'Hybrid',
+            'LMFC' => 'LMFC',
+            'Other' => 'Other',
         ];
         return $types;
     }
