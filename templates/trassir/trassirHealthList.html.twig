@@ -3,6 +3,12 @@
 {% block main %}
     <div class="row">
         <div class="col">
+            {{ dump(trassirHealth) }}
+            {{ dump(servers) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
 
             <table class="table table-striped table-bordered mt-4">
                 <thead>
@@ -22,9 +28,10 @@
                 </thead>
                 <tbody class="pt-5">
                 {% for server in servers %}
-                    {% if trassirHealth[server.id].health is defined
-                        and (trassirHealth[server.id].health['network'] is defined
-                        and trassirHealth[server.id].health['network']==1) %}
+                    {% if trassirHealth[server.id] is defined
+                        and (trassirHealth[server.id]['network'] is defined
+                        and trassirHealth[server.id]['network']==1)
+                    %}
                         {% set online = true %}
                     {% else %}
                         {% set online = false %}
@@ -36,10 +43,10 @@
                         </td>
                         {% for pointKey, point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
                             <td>
-                                {% if trassirHealth[server.id].health[pointKey] is defined %}
+                                {% if trassirHealth[server.id][pointKey] is defined %}
 
                                     {% if pointKey == 'disks' or pointKey == 'database' or pointKey == 'automation' or pointKey == 'network' %}
-                                        {% if  trassirHealth[server.id].health[pointKey]==1 %}
+                                        {% if  trassirHealth[server.id][pointKey]==1 %}
                                             <div class="text-success">OK</div>
                                         {% else %}
                                             <div class="text-danger">KO</div>
@@ -47,19 +54,19 @@
                                     {% endif %}
 
                                     {% if pointKey == 'cpu_load' %}
-                                        {% if trassirHealth[server.id].health[pointKey]>=50 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id].health[pointKey]~'%' }}</div>
-                                        {% elseif trassirHealth[server.id].health[pointKey]>30 and trassirHealth[server.id].health[pointKey]<50 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id].health[pointKey]~'%' }}</div>
+                                        {% if trassirHealth[server.id][pointKey]>=50 %}
+                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey]~'%' }}</div>
+                                        {% elseif trassirHealth[server.id][pointKey]>30 and trassirHealth[server.id][pointKey]<50 %}
+                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey]~'%' }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey]~' %' }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id][pointKey]~' %' }}</div>
                                         {% endif %}
                                     {% endif %}
 
                                     {% if pointKey == 'uptime' %}
-                                        {% set days = trassirHealth[server.id].health[pointKey]//86400 %}
-                                        {% set hours = (trassirHealth[server.id].health[pointKey] - days*86400)//3600 %}
-                                        {% set minutes = (trassirHealth[server.id].health[pointKey] - days*86400 - hours*3600)//60 %}
+                                        {% set days = trassirHealth[server.id][pointKey]//86400 %}
+                                        {% set hours = (trassirHealth[server.id][pointKey] - days*86400)//3600 %}
+                                        {% set minutes = (trassirHealth[server.id][pointKey] - days*86400 - hours*3600)//60 %}
 
                                         {% set uptime='' %}
                                         {% if days >0 %} {% set uptime =uptime ~ days~' days ' %} {% endif %}
@@ -79,44 +86,44 @@
                                     {% endif %}
 
                                     {% if pointKey == 'channels_total' %}
-                                        {{ trassirHealth[server.id].health[pointKey] }}
+                                        {{ trassirHealth[server.id][pointKey] }}
                                     {% endif %}
 
                                     {% if pointKey == 'channels_online' %}
-                                        {% if trassirHealth[server.id].health['channels_online']!=trassirHealth[server.id].health['channels_total'] %}
-                                            <div class="text-danger">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                        {% if trassirHealth[server.id]['channels_online']!=trassirHealth[server.id]['channels_total'] %}
+                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% endif %}
                                     {% endif %}
 
                                     {% if pointKey == 'disks_stat_main_days' %}
-                                        {% if trassirHealth[server.id].health[pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id].health[pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id].health[pointKey] > 14 and trassirHealth[server.id].health[pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
+                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
+                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
+                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% endif %}
                                     {% endif %}
 
                                     {% if pointKey == 'disks_stat_subs_days' %}
-                                        {% if trassirHealth[server.id].health[pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id].health[pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id].health[pointKey] > 14 and trassirHealth[server.id].health[pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
+                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
+                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
+                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% endif %}
                                     {% endif %}
 
                                     {% if pointKey == 'disks_stat_priv_days' %}
-                                        {% if trassirHealth[server.id].health[pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id].health[pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id].health[pointKey] > 14 and trassirHealth[server.id].health[pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
+                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
+                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
+                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id].health[pointKey] }}</div>
+                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
                                         {% endif %}
                                     {% endif %}
 
