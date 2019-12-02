@@ -73,9 +73,13 @@ class TrassirHealthController extends AbstractController
         }
 
         if(
-            $newData['channels_online'] == $previousData['channels_online']
-            && $newData['channels_total'] == $previousData['channels_total']
-            && (($newData['uptime'] - $previousData['uptime'])<(60*60))
+            $newData['channels_online'] === $previousData['channels_online']
+            && $newData['channels_total'] === $previousData['channels_total']
+            && $newData['disks'] === $previousData['disks']
+            && $newData['network'] === $previousData['network']
+            && $newData['database'] === $previousData['database']
+            && $newData['automation'] === $previousData['automation']
+
         ) {
             $result=false;
         }
