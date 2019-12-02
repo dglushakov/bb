@@ -20,27 +20,6 @@ class TrassirNvrDataRepository extends ServiceEntityRepository
         parent::__construct($registry, TrassirNvrData::class);
     }
 
-    public function getLastDataForEachNvrInList($idList){
-        $idList = implode(",", $idList);
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "SELECT nvr_data2.nvr, nvr_data2.time, nvr_data1.success, nvr_data1.health
-                FROM trassir_nvr_data as nvr_data1
-	            JOIN (SELECT MAX(date_time) as time, trassir_nvr_id_id as nvr FROM trassir_nvr_data WHERE trassir_nvr_id_id IN ($idList) GROUP BY trassir_nvr_id_id) as nvr_data2
-                ON nvr_data1.trassir_nvr_id_id = nvr_data2.nvr AND nvr_data1.date_time=nvr_data2.time";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $res =$stmt->fetchAll();
-
-        $resultArray=[];
-        foreach ($res as $row ){
-            $resultArray[$row['nvr']] = json_decode($row['health'], true);
-        }
-
-        return $resultArray;
-
-    }
-
-
     public function getLastDataForEachNvr(){
 
         $conn = $this->getEntityManager()->getConnection();
@@ -52,6 +31,25 @@ class TrassirNvrDataRepository extends ServiceEntityRepository
         $stmt->execute();
         $res =$stmt->fetchAll();
         return $res;
+    }
+
+    public function getLastHealthForEachNvr(){
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT nvr_data2.nvr, nvr_data2.time, nvr_data1.success, nvr_data1.health
+                FROM trassir_nvr_data as nvr_data1
+	            JOIN (SELECT MAX(date_time) as time, trassir_nvr_id_id as nvr FROM trassir_nvr_data GROUP BY trassir_nvr_id_id) as nvr_data2
+                ON nvr_data1.trassir_nvr_id_id = nvr_data2.nvr AND nvr_data1.date_time=nvr_data2.time';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $res =$stmt->fetchAll();
+
+        $resultArray=[];
+        foreach ($res as $row ){
+            $resultArray[$row['nvr']] = json_decode($row['health'], true);
+        }
+
+        return $resultArray;
     }
 
 }
