@@ -11,6 +11,9 @@
                         #
                     </th>
                     <th class="tr_fixed">
+                        Name
+                    </th>
+                    <th class="tr_fixed">
                         Online
                     </th>
                     {% for point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
@@ -22,106 +25,19 @@
                 </thead>
                 <tbody class="pt-5">
                 {% for server in servers %}
-                    {% if trassirHealth[server.id] is defined
-                        and (trassirHealth[server.id]['network'] is defined
-                        and trassirHealth[server.id]['network']==1)
-                    %}
-                        {% set online = true %}
-                    {% else %}
-                        {% set online = false %}
-                    {% endif %}
-                    <tr>
-                        <td><a href="{{path('trassirHealthSingleNvr',{'id':server.id})}}">{{ server.name ?  server.name : server.ip }}</a></td>
-                        <td><img src="{{ online?asset('img/poweron32.png'):asset('img/poweroff32.png') }}"
-                                 alt="Online status image" width="20px">
+                    <tr id="server_{{ server.id }}">
+                        <td>
+                            {{ loop.index }}
                         </td>
-                        {% for pointKey, point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
-                            <td>
-                                {% if trassirHealth[server.id][pointKey] is defined %}
+                        <td>
+                            {{ server.name??server.ip }}
+                        </td>
+                        <td class="serverOnline">
 
-                                    {% if pointKey == 'disks' or pointKey == 'database' or pointKey == 'automation' or pointKey == 'network' %}
-                                        {% if  trassirHealth[server.id][pointKey]==1 %}
-                                            <div class="text-success">OK</div>
-                                        {% else %}
-                                            <div class="text-danger">KO</div>
-                                        {% endif %}
-                                    {% endif %}
+                        </td>
+                        {% for key, point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
+                            <td class="{{ key }}">
 
-                                    {% if pointKey == 'cpu_load' %}
-                                        {% if trassirHealth[server.id][pointKey]>=50 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey]~'%' }}</div>
-                                        {% elseif trassirHealth[server.id][pointKey]>30 and trassirHealth[server.id][pointKey]<50 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey]~'%' }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id][pointKey]~' %' }}</div>
-                                        {% endif %}
-                                    {% endif %}
-
-                                    {% if pointKey == 'uptime' %}
-                                        {% set days = trassirHealth[server.id][pointKey]//86400 %}
-                                        {% set hours = (trassirHealth[server.id][pointKey] - days*86400)//3600 %}
-                                        {% set minutes = (trassirHealth[server.id][pointKey] - days*86400 - hours*3600)//60 %}
-
-                                        {% set uptime='' %}
-                                        {% if days >0 %} {% set uptime =uptime ~ days~' days ' %} {% endif %}
-                                        {% if hours >0 %} {% set uptime =uptime ~ hours~' hours ' %} {% endif %}
-                                        {% if minutes >0 %} {% set uptime =uptime ~ minutes~' minutes' %} {% endif %}
-
-                                        {% if days <1 %}
-                                            <div class="text-danger">{{ uptime|trim }}</div>
-                                        {% elseif days <3 %}
-                                            <div class="text-warning">{{ uptime|trim }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ uptime|trim }}</div>
-                                        {% endif %}
-
-
-
-                                    {% endif %}
-
-                                    {% if pointKey == 'channels_total' %}
-                                        {{ trassirHealth[server.id][pointKey] }}
-                                    {% endif %}
-
-                                    {% if pointKey == 'channels_online' %}
-                                        {% if trassirHealth[server.id]['channels_online']!=trassirHealth[server.id]['channels_total'] %}
-                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% endif %}
-                                    {% endif %}
-
-                                    {% if pointKey == 'disks_stat_main_days' %}
-                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% endif %}
-                                    {% endif %}
-
-                                    {% if pointKey == 'disks_stat_subs_days' %}
-                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% endif %}
-                                    {% endif %}
-
-                                    {% if pointKey == 'disks_stat_priv_days' %}
-                                        {% if trassirHealth[server.id][pointKey] <= 14 %}
-                                            <div class="text-danger">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% elseif trassirHealth[server.id][pointKey] > 14 and trassirHealth[server.id][pointKey] <=30 %}
-                                            <div class="text-warning">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% else %}
-                                            <div class="text-success">{{ trassirHealth[server.id][pointKey] }}</div>
-                                        {% endif %}
-                                    {% endif %}
-
-                                {% endif %}
                             </td>
                         {% endfor %}
                     </tr>
@@ -131,4 +47,132 @@
             </table>
         </div>
     </div>
+{% endblock %}
+
+{% block javascriptsAfterBody %}
+
+    <script>
+        $(document).ready(function () {
+            let $servers = [];
+            {% for server in servers %}
+            $servers.push({{ server.id }});
+            {% endfor %}
+
+            for (let i = 0; i < $servers.length; i++) {
+                let $link = "/trassirLastHealthSingleNvrJSON/"+$servers[i];
+                $.ajax({
+                    url: $link,
+                }).done(function (data) {
+                    if(data.status==="OK") {
+                        console.log ('got data ');
+                        console.dir(data);
+
+
+
+
+                        $imgTag = '<img src="{{ asset('img/poweron32.png') }}" alt="Online status image" width="20px">';
+                        $("#server_"+$servers[i]+" > td.serverOnline").html($imgTag);
+
+                        let $disksField=$("#server_"+$servers[i]+" > td.disks");
+                        if(data.disks==='1') {
+                            $disksField.addClass("text-success");
+                            $disksField.html('OK');
+                        } else {
+                            $disksField.addClass("text-danger");
+                            $disksField.html('KO');
+                        }
+
+                        var sec = data.uptime;
+                        var min = sec / 60;
+                        var hour = min / 60;
+                        var uptime =
+                            Math.floor(hour / 24)+'d ' +
+                            Math.floor(hour % 24) + 'h ' +
+                            Math.floor(min % 60) + 'm';
+
+                        let $uptimeField=$("#server_"+$servers[i]+" > td.uptime");
+                        if(data.uptime>=720) {
+                            $uptimeField.addClass("text-success");
+                            $uptimeField.html(uptime);
+                        } else {
+                            $disksField.addClass("text-danger");
+                            $disksField.html(uptime);
+                        }
+
+                        let $networkField=$("#server_"+$servers[i]+" > td.network");
+                        if(data.network==="1") {
+                            $networkField.addClass("text-success");
+                            $networkField.html('OK');
+                        } else {
+                            $networkField.addClass("text-danger");
+                            $networkField.html('KO');
+                        }
+
+                        let $cpuLoadField=$("#server_"+$servers[i]+" > td.cpu_load");
+                        if(data.cpu_load<50) {
+                            $cpuLoadField.addClass("text-success");
+                            $cpuLoadField.html('OK');
+                        } else {
+                            $cpuLoadField.addClass("text-danger");
+                            $cpuLoadField.html('KO');
+                        }
+
+                        let $databaseField=$("#server_"+$servers[i]+" > td.database");
+                        if(data.database==="1") {
+                            $databaseField.addClass("text-success");
+                            $databaseField.html('OK');
+                        } else {
+                            $databaseField.addClass("text-danger");
+                            $databaseField.html('KO');
+                        }
+
+                        let $automationField=$("#server_"+$servers[i]+" > td.automation");
+                        if(data.automation==="1") {
+                            $automationField.addClass("text-success");
+                            $automationField.html('OK');
+                        } else {
+                            $automationField.addClass("text-danger");
+                            $automationField.html('KO');
+                        }
+
+                        $("#server_"+$servers[i]+" > td.channels_total").html(data.channels_total);
+
+                        let $channels_onlineField=$("#server_"+$servers[i]+" > td.channels_online");
+                        $channels_onlineField.html(data.channels_online);
+                        if(data.channels_online===data.channels_online) {
+                            $channels_onlineField.addClass("text-success");
+                        } else {
+                            $channels_onlineField.addClass("text-danger");
+                        }
+
+                        let $disks_stat_main_daysField=$("#server_"+$servers[i]+" > td.disks_stat_main_days");
+                        $disks_stat_main_daysField.html(data.disks_stat_main_days);
+                        if(data.disks_stat_main_days > 45) {
+                            $disks_stat_main_daysField.addClass("text-success");
+                        } else {
+                            $disks_stat_main_daysField.addClass("text-danger");
+                        }
+
+                        let $disks_stat_subs_daysField=$("#server_"+$servers[i]+" > td.disks_stat_subs_days");
+                        $disks_stat_subs_daysField.html(data.disks_stat_subs_days);
+                        if(data.disks_stat_subs_days > 45) {
+                            $disks_stat_subs_daysField.addClass("text-success");
+                        } else {
+                            $disks_stat_subs_daysField.addClass("text-danger");
+                        }
+
+                    } else {
+                        $imgTag = '<img src="{{ asset('img/poweroff32.png') }}" alt="Online status image" width="20px">';
+                        $("#server_"+$servers[i]+" > td.serverOnline").html($imgTag);
+                    }
+                })
+                ;
+            }
+
+        });
+
+
+
+    </script>
+
 {% endblock %}

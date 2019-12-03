@@ -7,6 +7,7 @@ namespace App\Controller\Trassir;
 use App\Entity\TrassirNvr;
 use App\Entity\TrassirNvrData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TrassirHealthController extends AbstractController
@@ -82,4 +83,22 @@ class TrassirHealthController extends AbstractController
 
         return $result;
     }
+
+    /**
+     * @Route("/trassirLastHealthSingleNvrJSON/{id}", name="trassirLastHealthSingleNvrJSON")
+     */
+    public function trassirHealthSingleNvrJSON($id){
+        $this->denyAccessUnlessGranted('ROLE_NVR_HEALTH_LIST');
+        $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
+        $trassirHealth= $trassirDataRepo->findOneBy(['trassirNvrId'=>$id],['dateTime'=>'DESC']);
+
+        if($trassirHealth) {
+            $result = $trassirHealth->getHealth();
+            $result['status']='OK';
+        } else {
+            $result =['status'=>'error'];
+        }
+        return new JsonResponse($result);
+    }
+
 }
