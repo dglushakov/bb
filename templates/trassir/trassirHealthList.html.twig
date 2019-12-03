@@ -109,12 +109,11 @@
                         }
 
                         let $cpuLoadField=$("#server_"+$servers[i]+" > td.cpu_load");
+                        $cpuLoadField.html(data.cpu_load);
                         if(data.cpu_load<50) {
                             $cpuLoadField.addClass("text-success");
-                            $cpuLoadField.html('OK');
                         } else {
                             $cpuLoadField.addClass("text-danger");
-                            $cpuLoadField.html('KO');
                         }
 
                         let $databaseField=$("#server_"+$servers[i]+" > td.database");
