@@ -94,7 +94,9 @@ class TrassirHealthController extends AbstractController
 
         if($trassirHealth) {
             $result = $trassirHealth->getHealth();
-            $result['status']='OK';
+            if(array_key_exists('network', $result)) {
+                $result['status']='OK';
+            }
         } else {
             $result =['status'=>'error'];
         }
