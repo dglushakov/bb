@@ -14,6 +14,9 @@
                         Name
                     </th>
                     <th class="tr_fixed">
+                        Ip
+                    </th>
+                    <th class="tr_fixed">
                         Online
                     </th>
                     {% for point in constant('App\\Entity\\TrassirNvrData::HEALTH_POINTS') %}
@@ -31,6 +34,9 @@
                         </td>
                         <td>
                             {{ server.name??server.ip }}
+                        </td>
+                        <td>
+                            {{ server.ip }}
                         </td>
                         <td class="serverOnline">
 
