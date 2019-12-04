@@ -21,14 +21,14 @@ class TrassirHealthController extends AbstractController
         $trassirNvrRepo = $this->getDoctrine()->getRepository(TrassirNvr::class);
         $trassirNvrList = $trassirNvrRepo->findBy([],['name'=>'ASC', 'Ip'=>'ASC']);
 
-        $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
+        //$trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
 
 
-        $trassirHealth= $trassirDataRepo->getLastHealthForEachNvr();
+       // $trassirHealth= $trassirDataRepo->getLastHealthForEachNvr();
 
         return $this->render('trassir/trassirHealthList.html.twig', [
             'servers' => $trassirNvrList,
-            'trassirHealth'=>$trassirHealth,
+            //'trassirHealth'=>$trassirHealth,
         ]);
     }
 
