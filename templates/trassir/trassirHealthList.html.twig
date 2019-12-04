@@ -33,7 +33,7 @@
                             {{ loop.index }}
                         </td>
                         <td>
-                            {{ server.name??server.ip }}
+                            <a href ="{{ path('trassirHealthSingleNvr', {'id': server.id}) }}" >{{ server.name??server.ip }}</a>
                         </td>
                         <td>
                             {{ server.ip }}
