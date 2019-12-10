@@ -41,24 +41,26 @@ class TrassirHealthController extends AbstractController
         $trassirNvr=$trassirNvrRepo->findOneBy(['id'=>$id]);
 
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $trassirHealthArray = $trassirDataRepo->findBy(['trassirNvrId'=>$id],['dateTime'=>'DESC'], 1000,0);
+        $from = new \DateTime();
+        $from->modify('-7 days');
+        $trassirHealthArray = $trassirDataRepo->findBy(['trassirNvrId'=>$id, 'dateTime' => $from],['dateTime'=>'DESC']);
 
 
-        $trassirHealth=[];
-        $previousHealthData = null;
-        $counter =0;
-        foreach ($trassirHealthArray as $healthData){
-            $counter++;
-            $newHealthData = $healthData->getHealth();
-            if($this->isHealthDataChanges($newHealthData, $previousHealthData) || ($counter === count($trassirHealthArray))) {
-                $trassirHealth[$healthData->getDateTime()->format('Y-m-d H:i:s')]=$newHealthData;
-            }
-            $previousHealthData = $newHealthData;
-        }
+//        $trassirHealth=[];
+//        $previousHealthData = null;
+//        $counter =0;
+//        foreach ($trassirHealthArray as $healthData){
+//            $counter++;
+//            $newHealthData = $healthData->getHealth();
+//            if($this->isHealthDataChanges($newHealthData, $previousHealthData) || ($counter === count($trassirHealthArray))) {
+//                $trassirHealth[$healthData->getDateTime()->format('Y-m-d H:i:s')]=$newHealthData;
+//            }
+//            $previousHealthData = $newHealthData;
+//        }
 
         return $this->render('trassir/trassirHealthSingleServer.html.twig',[
             'server' => $trassirNvr,
-            'trassirHealth'=>$trassirHealth,
+            'trassirHealth'=>$trassirHealthArray,
         ]);
     }
 
