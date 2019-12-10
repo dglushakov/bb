@@ -41,10 +41,13 @@ class TrassirHealthController extends AbstractController
         $trassirNvr=$trassirNvrRepo->findOneBy(['id'=>$id]);
 
         $trassirDataRepo = $this->getDoctrine()->getRepository(TrassirNvrData::class);
-        $from = new \DateTime();
-        $from->modify('-7 days');
-        $trassirHealthArray = $trassirDataRepo->findBy(['trassirNvrId'=>$id, 'dateTime' => $from],['dateTime'=>'DESC']);
 
+        $trassirHealthArray = $trassirDataRepo->findBy(['trassirNvrId'=>$id],['dateTime'=>'DESC'], 1000, 0);
+
+        $trassirHealth=[];
+        foreach ($trassirHealthArray as $healthData) {
+            $trassirHealth[$healthData->getDateTime()->format('Y-m-d H:i:s')]=$healthData->getHealth();
+        }
 
 //        $trassirHealth=[];
 //        $previousHealthData = null;
@@ -60,7 +63,7 @@ class TrassirHealthController extends AbstractController
 
         return $this->render('trassir/trassirHealthSingleServer.html.twig',[
             'server' => $trassirNvr,
-            'trassirHealth'=>$trassirHealthArray,
+            'trassirHealth'=>$trassirHealth,
         ]);
     }
 
