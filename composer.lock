@@ -8,34 +8,34 @@
     "packages": [
         {
             "name": "dglushakov/trassir",
-            "version": "1.0.16",
+            "version": "1.0.20",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dglushakov/TrassirNVR.git",
-                "reference": "c4e9ad95944df5d5a9118524b109de4510cdeeec"
+                "url": "https://github.com/dglushakov/Trassir.git",
+                "reference": "89b4d93dcc520155c71dd68f286396fcd3e91f02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dglushakov/TrassirNVR/zipball/c4e9ad95944df5d5a9118524b109de4510cdeeec",
-                "reference": "c4e9ad95944df5d5a9118524b109de4510cdeeec",
+                "url": "https://api.github.com/repos/dglushakov/Trassir/zipball/89b4d93dcc520155c71dd68f286396fcd3e91f02",
+                "reference": "89b4d93dcc520155c71dd68f286396fcd3e91f02",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
-                "ext-json": "*"
+                "ext-json": "*",
+                "php": "^7.2.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.2"
+                "phpunit/phpunit": "^8.4"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Dglushakov\\Trassir\\": "src/"
+                    "dglushakov\\Trassir\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "proprietary"
+                "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -43,8 +43,7 @@
                     "email": "denis.glushakov@bk.ru"
                 }
             ],
-            "description": "lib for work with Trassir CCTV NVRs",
-            "time": "2019-08-20T16:21:47+00:00"
+            "time": "2020-01-05T19:42:43+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -6032,6 +6031,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2018-08-13T20:36:59+00:00"
         },
         {
@@ -6086,6 +6086,7 @@
                 "events",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2018-04-25T15:33:34+00:00"
         }
     ],
