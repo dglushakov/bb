@@ -7,7 +7,8 @@ namespace App\Controller\Trassir;
 use App\Entity\TrassirNvr;
 use App\Entity\TrassirNvrData;
 use App\Message\trassirHealthDataCollect;
-use Dglushakov\Trassir\TrassirServer;
+//use Dglushakov\Trassir\TrassirServer;
+use dglushakov\Trassir\TrassirNvr\TrassirNVR as TrassirServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,12 +38,8 @@ class TrassirDataCollector extends AbstractController
             $_ENV['TRASSIR_USER_PASSWORD'],
             $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
-        if ($health = $trassirServer->getHealth()) {
+        if ($health = $trassirServer->getNvrHealth()) {
             $trassirNvrData->setHealth($health);
-            if (array_key_exists('UserNames', $trassirServer->getHealth())) {
-                $trassirNvrData->setSuccess(true);
-            }
-
         } else {
             $trassirNvrData->setHealth([
                 'status' => 'error',
@@ -50,10 +47,22 @@ class TrassirDataCollector extends AbstractController
             $trassirNvrData->setSuccess(false);
         }
 
-        if ($objects = $trassirServer->getServerObjects()) {
+        if ($objects = $trassirServer->getObjectsTree()) {
+
+
+            foreach ($objects as $object) {
+                if($object['class']=='Server') {
+                    $trassirNvr->setName($object['name']);
+                    $trassirNvr->setGuid($object['guid']);
+                }
+            }
+
+            if ($userNames = $trassirServer->getUserNames()) {
+                $trassirNvrData->setSuccess(true);
+                $objects['UserNames'] =$userNames;
+            }
             $trassirNvrData->setObjects($objects);
-            $trassirNvr->setName($trassirServer->getName());
-            $trassirNvr->setGuid($trassirServer->getGuid());
+
         } else {
             $result = false;
             $trassirNvrData->setObjects([
