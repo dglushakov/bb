@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dglushakov/trassir",
-            "version": "1.0.20",
+            "version": "1.0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dglushakov/Trassir.git",
-                "reference": "89b4d93dcc520155c71dd68f286396fcd3e91f02"
+                "reference": "fbaf1bd6788e56dadccfffe55cad01708d74fef1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dglushakov/Trassir/zipball/89b4d93dcc520155c71dd68f286396fcd3e91f02",
-                "reference": "89b4d93dcc520155c71dd68f286396fcd3e91f02",
+                "url": "https://api.github.com/repos/dglushakov/Trassir/zipball/fbaf1bd6788e56dadccfffe55cad01708d74fef1",
+                "reference": "fbaf1bd6788e56dadccfffe55cad01708d74fef1",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                     "email": "denis.glushakov@bk.ru"
                 }
             ],
-            "time": "2020-01-05T19:42:43+00:00"
+            "time": "2020-01-07T20:03:49+00:00"
         },
         {
             "name": "doctrine/annotations",
