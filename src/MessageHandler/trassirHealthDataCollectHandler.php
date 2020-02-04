@@ -7,7 +7,8 @@ namespace App\MessageHandler;
 use App\Entity\TrassirNvr;
 use App\Entity\TrassirNvrData;
 use App\Message\trassirHealthDataCollect;
-use Dglushakov\Trassir\TrassirServer;
+//use Dglushakov\Trassir\TrassirServer;
+use dglushakov\Trassir\TrassirNvr\TrassirNVR as TrassirServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -35,7 +36,7 @@ class trassirHealthDataCollectHandler implements MessageHandlerInterface
             $_ENV['TRASSIR_USER_PASSWORD'],
             $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
-        if($health = $trassirServer->getHealth()) {
+        if($health = $trassirServer->getNvrHealth()) {
             $trassirNvrData->setHealth($health);
             $trassirNvrData->setSuccess(true);
         } else {
@@ -45,13 +46,24 @@ class trassirHealthDataCollectHandler implements MessageHandlerInterface
             $trassirNvrData->setSuccess(false);
         }
 
-        if($objects = $trassirServer->getServerObjects()){
+        if ($objects = $trassirServer->getObjectsTree()) {
+            foreach ($objects as $object) {
+                if($object['class']=='Server') {
+                    $trassirNvr->setName($object['name']);
+                    $trassirNvr->setGuid($object['guid']);
+                }
+            }
+
+            if ($userNames = $trassirServer->getUserNames()) {
+                $trassirNvrData->setSuccess(true);
+                $objects['UserNames'] =$userNames;
+            }
             $trassirNvrData->setObjects($objects);
-            $trassirNvr->setName($trassirServer->getName());
-            $trassirNvr->setGuid($trassirServer->getGuid());
+
         } else {
+            $result = false;
             $trassirNvrData->setObjects([
-                'status'=>'error'
+                'status' => 'error'
             ]);
         }
 

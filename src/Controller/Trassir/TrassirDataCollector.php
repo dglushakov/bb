@@ -39,6 +39,23 @@ class TrassirDataCollector extends AbstractController
             $_ENV['TRASSIR_SDK_PASSWORD']);
         $trassirNvrData = new TrassirNvrData();
         if ($health = $trassirServer->getNvrHealth()) {
+
+            $channelsHealth = [];
+            $channels = $trassirServer->getChannels();
+            if (!empty($channels)) {
+                foreach ($channels['channels'] as $channel) {
+                    $channelHealth = $trassirServer->getChannelSignalStatus($channel['guid']);
+                    $channelsHealth[] = [
+                        'name' => $channel['name'],
+                        'guid' => $channel['guid'],
+                        'signal' => $channelHealth['value']
+                    ];
+                }
+                if (isset($channelsHealth) && !empty($channelsHealth) && is_array($channelsHealth)) {
+                    $health['channels_health']=$channelsHealth;
+                }
+            }
+
             $trassirNvrData->setHealth($health);
         } else {
             $trassirNvrData->setHealth([
@@ -48,8 +65,6 @@ class TrassirDataCollector extends AbstractController
         }
 
         if ($objects = $trassirServer->getObjectsTree()) {
-
-
             foreach ($objects as $object) {
                 if($object['class']=='Server') {
                     $trassirNvr->setName($object['name']);
