@@ -23,12 +23,12 @@ class trassirHealthDataCollectHandler implements MessageHandlerInterface
 
     }
 
-    public function __invoke(trassirHealthDataCollect $dataCollectMesasge)
+    public function __invoke(trassirHealthDataCollect $dataCollectMessage)
     {
-        //$id = $dataCollectMesasge->getId();
 
         $trassirNvrRepo = $this->entityManager->getRepository(TrassirNvr::class);
-        $trassirNvr = $trassirNvrRepo->find($dataCollectMesasge->getId());
+        /** @var  $trassirNvr TrassirNvr */
+        $trassirNvr = $trassirNvrRepo->find($dataCollectMessage->getNvrId());
 
 
         $trassirServer = new TrassirServer($trassirNvr->getIp(),

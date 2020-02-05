@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dglushakov/trassir",
-            "version": "1.0.21",
+            "version": "1.0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dglushakov/Trassir.git",
-                "reference": "fbaf1bd6788e56dadccfffe55cad01708d74fef1"
+                "reference": "bc572071a614554143c22a8f020d0b026e8d8de4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dglushakov/Trassir/zipball/fbaf1bd6788e56dadccfffe55cad01708d74fef1",
-                "reference": "fbaf1bd6788e56dadccfffe55cad01708d74fef1",
+                "url": "https://api.github.com/repos/dglushakov/Trassir/zipball/bc572071a614554143c22a8f020d0b026e8d8de4",
+                "reference": "bc572071a614554143c22a8f020d0b026e8d8de4",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                     "email": "denis.glushakov@bk.ru"
                 }
             ],
-            "time": "2020-01-07T20:03:49+00:00"
+            "time": "2020-02-05T08:27:34+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -3750,16 +3750,16 @@
         },
         {
             "name": "symfony/messenger",
-            "version": "v4.3.4",
+            "version": "v4.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/messenger.git",
-                "reference": "ac9ab05acc8eba0ac311eb8511484f0c5155cde2"
+                "reference": "ec66ab2d4e0565d287e016210f8046cd97fa7975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/messenger/zipball/ac9ab05acc8eba0ac311eb8511484f0c5155cde2",
-                "reference": "ac9ab05acc8eba0ac311eb8511484f0c5155cde2",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/ec66ab2d4e0565d287e016210f8046cd97fa7975",
+                "reference": "ec66ab2d4e0565d287e016210f8046cd97fa7975",
                 "shasum": ""
             },
             "require": {
@@ -3771,7 +3771,7 @@
                 "symfony/event-dispatcher": "<4.3"
             },
             "require-dev": {
-                "doctrine/dbal": "^2.5",
+                "doctrine/dbal": "^2.6",
                 "psr/cache": "~1.0",
                 "symfony/console": "~3.4|~4.0",
                 "symfony/debug": "~4.1",
@@ -3820,7 +3820,7 @@
             ],
             "description": "Symfony Messenger Component",
             "homepage": "https://symfony.com",
-            "time": "2019-08-23T06:45:45+00:00"
+            "time": "2019-11-30T08:26:41+00:00"
         },
         {
             "name": "symfony/mime",

@@ -6,27 +6,17 @@ namespace App\Message;
 
 class trassirHealthDataCollect
 {
-    private $id;
+    private $nvrId;
 
-    public function __construct($id)
+    public function __construct($nvrId)
     {
-        $this->id = $id;
+        $this->nvrId = $nvrId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
+    public function getNvrId()
     {
-        $this->id = $id;
+        return $this->nvrId;
     }
 
 }
