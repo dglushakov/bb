@@ -126,7 +126,6 @@ class TrassirDataCollector extends AbstractController
 
         foreach ($trassirNvrList as $nvrToCollectData) {
             $message = new trassirHealthDataCollect($nvrToCollectData->getId());
-            //$this->trassirDataCollect($nvrToCollectData->getId(), $em);
             $messageBus->dispatch($message);
         }
         return new JsonResponse([

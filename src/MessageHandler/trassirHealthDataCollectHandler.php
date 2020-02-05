@@ -72,7 +72,6 @@ class trassirHealthDataCollectHandler implements MessageHandlerInterface
         $this->entityManager->persist($trassirNvrData);
 
         $trassirNvr->setLastHealthAndDataCollectedAt(new \DateTime());
-
         $this->entityManager->persist($trassirNvr);
 
         $this->entityManager->flush();
