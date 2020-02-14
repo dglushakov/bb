@@ -3,7 +3,7 @@
 {% block main %}
     <div class="row">
         <div class="col text-center">
-            <h2>{{ (server.name is defined) ? server.name : server.ip }}</h2>
+            <h2>{{ (server.name is defined) ? server.name ~' '~ server.ip : server.ip }}</h2>
         </div>
     </div>
     <div class="row">
