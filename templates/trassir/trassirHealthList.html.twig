@@ -144,7 +144,7 @@
 
                         let $channels_onlineField=$("#server_"+$servers[i]+" > td.channels_online");
                         $channels_onlineField.html(data.channels_online);
-                        if(data.channels_online===data.channels_online) {
+                        if(data.channels_online===data.channels_total) {
                             $channels_onlineField.addClass("text-success");
                         } else {
                             $channels_onlineField.addClass("text-danger");
